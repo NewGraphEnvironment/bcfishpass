@@ -1,0 +1,27 @@
+# QGIS
+# edit the qlr text file with these 3 entries.  first 2 might do it though
+
+replace
+<datasource>dbname='bcfishpass' host=localhost port=5432 user='postgres' password='postgres'
+
+with
+<datasource>dbname='bcbarriers' host=159.203.55.129 port=5432 user='ali' password='3MkWtsBF4Rq8'
+
+replace
+<datasource>dbname='bcfishpass' host=localhost
+with
+<datasource>dbname='bcbarriers' host=159.203.55.129
+
+
+replace
+source="dbname='bcfishpass' host=localhost port=5432 user='postgres'
+
+with
+source="dbname='bcbarriers' host=159.203.55.129 port=5432 user='ali'
+
+
+replace
+source="dbname='bcfishpass' host=localhost
+
+with
+source="dbname='bcbarriers' host=159.203.55.129
