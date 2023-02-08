@@ -1,4 +1,4 @@
-name: bcfishpass
+name: newgraph
 channels:
   - conda-forge
   - defaults
@@ -8,27 +8,28 @@ dependencies:
   - zip
   - unzip
   - parallel
+  - cdo
   - libpq
-  - jq
-  - python
+  - gdal>=3.5
+  - python=3.9
+  - rasterio
   - pip
   - requests
   - owslib
-  - awscli
+  - geopandas>=0.10.2
   - psycopg2
   - sqlalchemy<2.0
-  - gdal
-  - rasterio
-  - geopandas
   - geoalchemy2
+  - jq
   - rasterstats
   - scikit-image
+  - awscli
   - seaborn
   - pip:
       - bcdata==0.7.6
 variables:
   PGHOST: localhost
-  PGUSER: postgres
+  PGUSER: airvine
   PGPORT: 5432
-  PGDATABASE: bcfishpass
-  DATABASE_URL: postgresql://postgres@localhost:5432/bcfishpass
+  PGDATABASE: newgraph
+  DATABASE_URL: postgresql://airvine@localhost:5432/newgraph
