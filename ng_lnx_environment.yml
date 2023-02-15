@@ -1,0 +1,35 @@
+name: newgraph
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - make
+  - wget
+  - zip
+  - unzip
+  - parallel
+  - libpq
+  - jq
+  - python
+  - pip
+  - cdo
+  - requests
+  - owslib
+  - awscli
+  - psycopg2
+  - sqlalchemy<2.0
+  - gdal
+  - rasterio
+  - geopandas
+  - geoalchemy2
+  - rasterstats
+  - scikit-image
+  - seaborn
+  - pip:
+      - bcdata==0.7.6
+variables:
+  PGHOST: localhost
+  PGUSER: airvine
+  PGPORT: 5432
+  PGDATABASE: newgraph
+  DATABASE_URL: postgresql://airvine@localhost:5432/newgraph

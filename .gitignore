@@ -37,5 +37,5 @@ qa/*csv
 export/outputs
 
 # ignore current parameters, just track param in subfolders
-parameters/param_habitat.csv
-parameters/param_watersheds.csv
+# parameters/param_habitat.csv
+# parameters/param_watersheds.csv
