@@ -26,7 +26,7 @@ clean:
 # SETUP
 # ------
 # load parameters, create user data tables
-.make/setup: 
+.make/setup:
 	mkdir -p .make
 	# create tables for parameters and user maintained data
 	$(PSQL) -f parameters/sql/parameters.sql
@@ -59,7 +59,7 @@ clean:
 # GRADIENT BARRIERS
 # ------
 # Generate all gradient barriers at 5/10/15/20/25/30% thresholds.
-model/gradient_barriers/.make/gradient_barriers: 
+model/gradient_barriers/.make/gradient_barriers:
 	cd model/gradient_barriers; make
 
 # ------
@@ -74,7 +74,7 @@ model/gradient_barriers/.make/gradient_barriers:
 # ------
 # Load modelled crossings from archive posted to s3
 # (this ensures consistent modelled crossing ids for all model users)
-model/modelled_stream_crossings/.make/download: 
+model/modelled_stream_crossings/.make/download:
 	cd model/modelled_stream_crossings; make .make/download
 
 # ------
@@ -96,13 +96,13 @@ model/modelled_stream_crossings/.make/download:
 	data/user_pscis_barrier_status.csv \
 	data/wsg_species_presence.csv \
 	data/user_habitat_classification.csv
-	./scripts/load_csv.sh data/user_barriers_anthropogenic.csv 
+	./scripts/load_csv.sh data/user_barriers_anthropogenic.csv
 	./scripts/load_csv.sh data/user_modelled_crossing_fixes.csv
 	./scripts/load_csv.sh data/user_pscis_barrier_status.csv
 	./scripts/load_csv.sh data/wsg_species_presence.csv
 	./scripts/load_csv.sh data/user_barriers_definite.csv
-	./scripts/load_csv.sh data/user_habitat_classification.csv 
-	# all stream breaking is done in access model, create required endpoints 
+	./scripts/load_csv.sh data/user_habitat_classification.csv
+	# all stream breaking is done in access model, create required endpoints
 	# before running it
 	$(PSQL) -f model/habitat_linear/sql/user_habitat_classification_endpoints.sql
 	touch $@
@@ -110,7 +110,7 @@ model/modelled_stream_crossings/.make/download:
 # -----
 # ACCESS MODEL
 # -----
-# streams must be broken at user habitat classifcation lines, so 
+# streams must be broken at user habitat classifcation lines, so
 # we need to add the data before running the access model
 model/access/.make/model_access: .make/falls \
 	.make/dams \
@@ -123,8 +123,8 @@ model/access/.make/model_access: .make/falls \
 # ACCESS MODEL QA REPORTS
 # -----
 $(QA_ACCESS_OUTPUTS): reports/access/%.csv: reports/access/sql/%.sql \
-	model/access/.make/model_access 
-	psql2csv $(DATABASE_URL) < $< > $@	
+	model/access/.make/model_access
+	psql2csv $(DATABASE_URL) < $< > $@
 
 # simple target for building only access model and running QA
 .make/model_access: $(QA_ACCESS_OUTPUTS)
@@ -140,13 +140,13 @@ model/precipitation/.make/precip:
 # -----
 # CHANNEL WIDTH
 # -----
-model/channel_width/.make/channel_width: .make/precipitation
+model/channel_width/.make/channel_width: model/precipitation/.make/precip
 	cd model/channel_width; make
 
 # -----
 # DISCHARGE
 # -----
-model/discharge/.make/discharge: 
+model/discharge/.make/discharge:
 	cd model/discharge; make
 
 # -----
@@ -154,7 +154,7 @@ model/discharge/.make/discharge:
 # -----
 .make/habitat_linear: .make/model_access \
 	model/channel_width/.make/channel_width \
-	model/discharge/.make/discharge 
+	model/discharge/.make/discharge
 	cd model/habitat_linear; ./habitat_linear.sh
 	touch $@
 
@@ -168,7 +168,7 @@ model/discharge/.make/discharge:
 	reports/crossings/sql/point_report_obs_belowupstrbarriers.sql \
 	reports/crossings/sql/all_spawningrearing_per_barrier.sql
 	# todo - optimize below to write to temp tables rather than applying updates
-	
+
 	# run report per watershed group on barriers_anthropogenic
 	$(PSQL) -f reports/crossings/sql/point_report_columns.sql \
 		-v point_table=barriers_anthropogenic
@@ -192,10 +192,10 @@ model/discharge/.make/discharge:
 		-v dnstr_barriers_id=barriers_anthropogenic_dnstr \
 		-v wsg=$$wsg ; \
 	done
-	
+
 	# For OBS in the crossings table, report on belowupstrbarriers columns.
-	# This requires a separate query 
-	# (because the dnstr_barriers_anthropogenic is used in above report, 
+	# This requires a separate query
+	# (because the dnstr_barriers_anthropogenic is used in above report,
 	# and that misses the OBS of interest)
 	$(PSQL) -f reports/crossings/sql/point_report_obs_belowupstrbarriers.sql
 
@@ -211,7 +211,7 @@ model/discharge/.make/discharge:
 	$(PSQL) -c "COMMENT ON COLUMN bcfishpass.crossings.barriers_anthropogenic_upstr_count IS 'A count of the barrier crossings upstream of the given crossing';"
 	$(PSQL) -c "UPDATE bcfishpass.crossings SET barriers_anthropogenic_dnstr_count = array_length(barriers_anthropogenic_dnstr, 1) WHERE barriers_anthropogenic_dnstr IS NOT NULL";
 	$(PSQL) -c "UPDATE bcfishpass.crossings SET barriers_anthropogenic_upstr_count = array_length(barriers_anthropogenic_upstr, 1) WHERE barriers_anthropogenic_upstr IS NOT NULL";
-	
+
 	touch $@
 
 # -----

@@ -2,11 +2,11 @@
 drop table if exists bcfishpass.habitat_lateral_clean;
 create table bcfishpass.habitat_lateral_clean as
   select
-    row_number() over() as id, 
-    value,
+    row_number() over() as id,
+    val as value,
     geom
   from bcfishpass.habitat_lateral
-  where value != 0
+  where val != 0
   and st_area(geom) > 100;
 create index on bcfishpass.habitat_lateral_clean using gist (geom);
 
@@ -14,7 +14,7 @@ create index on bcfishpass.habitat_lateral_clean using gist (geom);
 
 -- simplify and buffer
 drop table if exists bcfishpass.habitat_lateral_rail1;
-create table bcfishpass.habitat_lateral_rail1 
+create table bcfishpass.habitat_lateral_rail1
   (geom geometry(multipolygon));
 
 insert into bcfishpass.habitat_lateral_rail1
@@ -26,7 +26,7 @@ select
         st_makevalid(geom), 20),
       25),
     -15
-  ))) as geom  
+  ))) as geom
 from bcfishpass.habitat_lateral_clean
 where value = 2
 and st_area(geom) > 100;
@@ -35,15 +35,15 @@ create index on bcfishpass.habitat_lateral_rail1 using gist (geom);
 
 -- cluster features > 100m2 within 50m, then merge
 drop table if exists bcfishpass.habitat_lateral_rail2;
-create table bcfishpass.habitat_lateral_rail2 
+create table bcfishpass.habitat_lateral_rail2
 (cid integer,
  geom geometry(multipolygon, 3005)
 );
 
 insert into bcfishpass.habitat_lateral_rail2
- select 
-   cid, 
-   st_multi(st_union(geom)) as geom 
+ select
+   cid,
+   st_multi(st_union(geom)) as geom
  from
  (
   select
@@ -59,7 +59,7 @@ insert into bcfishpass.habitat_lateral_rail2
 
 -- retain clusters > 1000m2
 drop table if exists bcfishpass.habitat_lateral_rail3;
-create table bcfishpass.habitat_lateral_rail3 
+create table bcfishpass.habitat_lateral_rail3
 (id serial primary key,
   wscode_ltree ltree,
   value integer,
@@ -67,8 +67,8 @@ create table bcfishpass.habitat_lateral_rail3
 );
 
 insert into bcfishpass.habitat_lateral_rail3 (
-  wscode_ltree, 
-  value, 
+  wscode_ltree,
+  value,
   geom
 )
 select distinct on (a.geom)
@@ -85,5 +85,5 @@ create index on bcfishpass.habitat_lateral_rail3 using gist (geom);
 
 drop table bcfishpass.habitat_lateral_rail1;
 drop table bcfishpass.habitat_lateral_rail2;
-drop table if exists habitat_lateral_disconnected_rail;
+drop table if exists bcfishpass.habitat_lateral_disconnected_rail;
 alter table bcfishpass.habitat_lateral_rail3 rename to habitat_lateral_disconnected_rail;

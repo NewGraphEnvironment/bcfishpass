@@ -1,11 +1,13 @@
-.PHONY: all clean 
+.PHONY: all clean
 
 PSQL=psql $(DATABASE_URL) -v ON_ERROR_STOP=1
 TMP=/tmp
-WSG = $(shell $(PSQL) -AtX -c "SELECT watershed_group_code FROM bcfishpass.param_watersheds where watershed_group_code != 'ELKR'")
 
-VALLEY_OUTPUTS = $(patsubst %, data/temp/%/valleys.tif, $(WSG)) 
-LATERAL_OUTPUTS = $(patsubst %, data/temp/%/habitat_lateral.tif, $(WSG)) 
+# hack to deal with LUET swap out != 'ELKR' for NOT IN ('ELKR', 'LEUT')
+WSG = $(shell $(PSQL) -AtX -c "SELECT watershed_group_code FROM bcfishpass.param_watersheds where watershed_group_code NOT IN ('ELKR', 'LEUT')")
+
+VALLEY_OUTPUTS = $(patsubst %, data/temp/%/valleys.tif, $(WSG))
+LATERAL_OUTPUTS = $(patsubst %, data/temp/%/habitat_lateral.tif, $(WSG))
 
 # find bounds of BC
 BOUNDS = $(shell $(PSQL) -AtX -F " " -c "select st_xmin(geom), st_ymin(geom), st_xmax(geom), st_ymax(geom) \
@@ -27,13 +29,13 @@ clean:
 	rm -rf .make
 
 # published floodplain definitions
-.make/cwb_floodplains_bc_area_svw: 
+.make/cwb_floodplains_bc_area_svw:
 	mkdir -p .make
 	bcdata bc2pg WHSE_BASEMAPPING.CWB_FLOODPLAINS_BC_AREA_SVW
 	touch $@
 
 # ESA world landcover - download from S3 bucket
-data/esa_bc.tif:	
+data/esa_bc.tif:
 	aws s3 cp s3://esa-worldcover/v100/2020/map/ESA_WorldCover_10m_2020_v100_N54W123_Map.tif \
 		$(TMP)/ESA_WorldCover_10m_2020_v100_N54W123_Map.tif --no-sign-request
 	aws s3 cp s3://esa-worldcover/v100/2020/map/ESA_WorldCover_10m_2020_v100_N57W120_Map.tif \
@@ -116,7 +118,7 @@ $(LATERAL_OUTPUTS): $(VALLEY_OUTPUTS) habitat_lateral.py data/esa_bc.tif .make/c
 data/habitat_lateral.tif: $(LATERAL_OUTPUTS)
 	# something is not working here, it is only pulling the last output tif, not the entire collection
 	python merge.py $(LATERAL_OUTPUTS) -o $@ --method max --co COMPRESS=DEFLATE --co NUM_THREADS=ALL_CPUS
-	
+
 # load merged habitat_lateral.tif to postgres as polygons
 .make/habitat_lateral: data/habitat_lateral.tif
 	$(PSQL) -c "drop table if exists bcfishpass.habitat_lateral"
@@ -130,7 +132,7 @@ data/habitat_lateral.tif: $(LATERAL_OUTPUTS)
   -lco GEOMETRY_NAME=geom \
   -nln bcfishpass.habitat_lateral \
   /vsistdin/
-	
+
 	# clean up habitat potentially isolated by rail
 	$(PSQL) -f sql/habitat_lateral.sql
 	touch $@
