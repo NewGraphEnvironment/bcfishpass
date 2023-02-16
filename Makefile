@@ -152,7 +152,7 @@ model/discharge/.make/discharge:
 # -----
 # LINEAR HABITAT MODEL
 # -----
-.make/habitat_linear: .make/model_access \
+.make/habitat_linear: model/access/.make/model_access \
 	model/channel_width/.make/channel_width \
 	model/discharge/.make/discharge
 	cd model/habitat_linear; ./habitat_linear.sh
