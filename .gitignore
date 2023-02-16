@@ -36,6 +36,8 @@ qa/*csv
 # data dumps
 export/outputs
 
+model/channel_width/channel_width_analysis.csv
+
 # ignore current parameters, just track param in subfolders
 # parameters/param_habitat.csv
 # parameters/param_watersheds.csv
