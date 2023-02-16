@@ -1,4 +1,4 @@
-name: newgraph
+name: ngmac
 channels:
   - conda-forge
   - defaults
@@ -12,7 +12,7 @@ dependencies:
   - jq
   - python
   - pip
-  - cdo
+ # - cdo
   - requests
   - owslib
   - awscli
