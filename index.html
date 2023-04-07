@@ -7,6 +7,7 @@
   <title>bcfishpass &mdash; bcfishpass v0.1.dev2 documentation</title>
       <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
       <link rel="stylesheet" href="_static/css/theme.css" type="text/css" />
+      <link rel="stylesheet" href="_static/css/custom.css" type="text/css" />
   <!--[if lt IE 9]>
     <script src="_static/js/html5shiv.min.js"></script>
   <![endif]-->
@@ -44,9 +45,10 @@
               <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="01_background.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02_methodology.html">Methodology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03_example_use_cases.html">Sample use case scenarios</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04_table_definitions.html">Output table definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_model_access.html">Access model</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_example_use_cases.html">Sample use case scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_data_dictionary.html">Data Dictionary</a></li>
+<li class="toctree-l1"><a class="reference internal" href="07_credits.html">Credits</a></li>
 </ul>
 
         </div>
@@ -75,7 +77,7 @@
              
   <section id="bcfishpass">
 <h1>bcfishpass<a class="headerlink" href="#bcfishpass" title="Permalink to this heading"></a></h1>
-<p><code class="docutils literal notranslate"><span class="pre">bcfishpass</span></code> is a collection of scripts to create and maintain an aquatic connectivity / fish passage database for British Coloumbia.</p>
+<p><code class="docutils literal notranslate"><span class="pre">bcfishpass</span></code> is a collection of scripts to create and maintain an aquatic connectivity / fish passage database for British Columbia.</p>
 <p>The generated <code class="docutils literal notranslate"><span class="pre">bcfishpass</span></code> database:</p>
 <ul class="simple">
 <li><p>tracks/models natural barriers to fish passage (waterfalls, steep gradients, other)</p></li>
@@ -89,9 +91,25 @@
 <p class="caption" role="heading"><span class="caption-text">Contents:</span></p>
 <ul>
 <li class="toctree-l1"><a class="reference internal" href="01_background.html">Background</a></li>
-<li class="toctree-l1"><a class="reference internal" href="02_methodology.html">Methodology</a></li>
-<li class="toctree-l1"><a class="reference internal" href="03_example_use_cases.html">Sample use case scenarios</a></li>
-<li class="toctree-l1"><a class="reference internal" href="04_table_definitions.html">Output table definitions</a></li>
+<li class="toctree-l1"><a class="reference internal" href="02_model_access.html">Access model</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="02_model_access.html#collect-known-natural-barriers">1. Collect known natural barriers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_model_access.html#generate-gradient-barriers">2. Generate gradient barriers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_model_access.html#filter-natural-barriers">3. Filter natural barriers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_model_access.html#identify-stream-downstream-of-all-natural-barriers">4. Identify stream downstream of all natural barriers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_model_access.html#collect-known-anthropogenic-barriers">5. Collect known anthropogenic barriers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_model_access.html#model-potential-anthropogenic-barriers">6. Model potential anthropogenic barriers</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_model_access.html#report">7. Report</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_model_access.html#known-limitations">8. Known limitations</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_model_access.html#enhancements-improvements">9. Enhancements / improvements</a></li>
+<li class="toctree-l2"><a class="reference internal" href="02_model_access.html#publication-distribution">10. Publication / distribution</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="05_example_use_cases.html">Sample use case scenarios</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_data_dictionary.html">Data Dictionary</a><ul>
+<li class="toctree-l2"><a class="reference internal" href="06_data_dictionary.html#freshwater-fish-habitat-accessibility-model-pacific-salmon-and-steelhead">Freshwater Fish Habitat Accessibility MODEL - Pacific Salmon and Steelhead</a></li>
+</ul>
+</li>
+<li class="toctree-l1"><a class="reference internal" href="07_credits.html">Credits</a></li>
 </ul>
 </div>
 </section>
@@ -106,7 +124,7 @@
   <hr/>
 
   <div role="contentinfo">
-    <p>&#169; Copyright 2023, Simon Norris.</p>
+    <p>&#169; Copyright 2023, Simon Norris, bcfishpass contributors.</p>
   </div>
 
   Built with <a href="https://www.sphinx-doc.org/">Sphinx</a> using a
