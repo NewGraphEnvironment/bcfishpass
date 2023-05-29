@@ -1,4 +1,4 @@
-name: newgraph
+name: bcfishpass
 channels:
   - conda-forge
   - defaults
@@ -29,7 +29,7 @@ dependencies:
       - bcdata==0.7.6
 variables:
   PGHOST: localhost
-  PGUSER: airvine
+  PGUSER: postgres
   PGPORT: 5432
-  PGDATABASE: newgraph
-  DATABASE_URL: postgresql://airvine@localhost:5432/newgraph
+  PGDATABASE: bcfishpass
+  DATABASE_URL: postgresql://postgres@localhost:5432/bcfishpass
