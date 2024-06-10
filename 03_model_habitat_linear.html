@@ -4,7 +4,7 @@
   <meta charset="utf-8" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
 
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Linear habitat model &mdash; bcfishpass v0.1.dev2 documentation</title>
+  <title>Linear spawning/rearing habitat model &mdash; bcfishpass v0.1.dev2 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
       <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=929716b1" />
@@ -22,7 +22,7 @@
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
-    <link rel="next" title="&lt;no title&gt;" href="04_model_habitat_lateral.html" />
+    <link rel="next" title="Lateral habitat model (DRAFT)" href="04_model_habitat_lateral.html" />
     <link rel="prev" title="Access model" href="02_model_access.html" /> 
 </head>
 
@@ -49,15 +49,15 @@
 <ul class="current">
 <li class="toctree-l1"><a class="reference internal" href="01_background.html">Background</a></li>
 <li class="toctree-l1"><a class="reference internal" href="02_model_access.html">Access model</a></li>
-<li class="toctree-l1 current"><a class="current reference internal" href="#">Linear habitat model</a><ul>
+<li class="toctree-l1 current"><a class="current reference internal" href="#">Linear spawning/rearing habitat model</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#gradient">Gradient</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#channel-width-discharge">Channel width / discharge</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#connectivity-feature-type">Connectivity / feature type</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#discharge-channel-width">Discharge / channel width</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#feature-type-and-connectivity">Feature type and connectivity</a></li>
 </ul>
 </li>
-<li class="toctree-l1"><a class="reference internal" href="05_example_use_cases.html">Sample use case scenarios</a></li>
-<li class="toctree-l1"><a class="reference internal" href="06_data_dictionary.html">Data Dictionary</a></li>
-<li class="toctree-l1"><a class="reference internal" href="07_credits.html">Credits</a></li>
+<li class="toctree-l1"><a class="reference internal" href="04_model_habitat_lateral.html">Lateral habitat model (DRAFT)</a></li>
+<li class="toctree-l1"><a class="reference internal" href="05_data_dictionary.html">Data Distribution</a></li>
+<li class="toctree-l1"><a class="reference internal" href="06_credits.html">Credits</a></li>
 </ul>
 
         </div>
@@ -74,7 +74,7 @@
           <div role="navigation" aria-label="Page navigation">
   <ul class="wy-breadcrumbs">
       <li><a href="index.html" class="icon icon-home" aria-label="Home"></a></li>
-      <li class="breadcrumb-item active">Linear habitat model</li>
+      <li class="breadcrumb-item active">Linear spawning/rearing habitat model</li>
       <li class="wy-breadcrumbs-aside">
             <a href="_sources/03_model_habitat_linear.md.txt" rel="nofollow"> View page source</a>
       </li>
@@ -84,34 +84,123 @@
           <div role="main" class="document" itemscope="itemscope" itemtype="http://schema.org/Article">
            <div itemprop="articleBody">
              
-  <section id="linear-habitat-model">
-<span id="linear-habitat"></span><h1>Linear habitat model<a class="headerlink" href="#linear-habitat-model" title="Link to this heading"></a></h1>
+  <section id="linear-spawning-rearing-habitat-model">
+<span id="linear-habitat"></span><h1>Linear spawning/rearing habitat model<a class="headerlink" href="#linear-spawning-rearing-habitat-model" title="Link to this heading"></a></h1>
 <p>Streams accessible to fish may be suitable for spawning or rearing, or may only be used as movement corridors to reach such habitats. When estimating fragmentation and prioritizing further work, the amount of usable spawning or rearing habitat (habitat quality) is of greater interest than the raw amount of corridor habitat. In addition to modelling barriers to fish passage, <code class="docutils literal notranslate"><span class="pre">bcfishpass</span></code> can model the intrinsic potential (IP) of streams to support spawning or rearing activities for several species (Pacific Salmon, Steelhead, Bull Trout, Westslope Cutthroat Trout).</p>
-<p>Linear habitat IP modelling is currently based on species specific criteria for:</p>
+<p>Linear spawning/rearing habitat modelling is currently based on species specific criteria for:</p>
 <ul class="simple">
 <li><p>stream gradient</p></li>
 <li><p>channel width or discharge (depending on modelling requirments and/or data availability)</p></li>
 <li><p>connectivity (rearing streams must be connected to spawning streams)</p></li>
 <li><p>feature type (spawning or rearing occurs in stream / wetland / lake etc)</p></li>
-<li><p>expert input (known spawning locations)</p></li>
 </ul>
+<p>Per species threshold values for stream gradient and discharge/channel width are noted (and can be adjusted) in the file <a class="reference external" href="https://github.com/smnorris/bcfishpass/blob/main/parameters/example_testing/parameters_habitat_thresholds.csv">parameters_habitat_thresholds.csv</a>.</p>
+<p>Sources (via literature and analysis) for these values for Pacific salmon and steelhead are documented in Table 1 of <a class="reference external" href="https://cwf-fcf.org/en/resources/research-papers/BC_report_formatted_final.pdf">Rebelatto et al (2024)</a>.</p>
+<p>Streams with observed spawning or rearing (from <a class="reference external" href="https://catalogue.data.gov.bc.ca/dataset/known-bc-fish-observations-and-bc-fish-distributions">FISS</a> via <a class="reference external" href="https://github.com/smnorris/bcfishobs">bcfishobs</a>, PSF’s <a class="reference external" href="https://www.salmonexplorer.ca">Pacific Salmon Explorer</a>, and CWF <a class="reference external" href="https://www.globalconservationsolutions.com/wp-content/uploads/2022/03/CWF-WCRP-Guide.pdf">WCRP</a> stakeholder inputs) are automatically classified as spawning or rearing regardless of stream characteristics.</p>
 <section id="gradient">
 <h2>Gradient<a class="headerlink" href="#gradient" title="Link to this heading"></a></h2>
-<p>Gradient of each stream segment is calculated as rise over run. Rise is taken from the Z value of the endpoints of the stream segments. Run is the length of the steam segments. Stream segments are from the BC Freshwater Atlas, further subdivided by other stream-referenced features used in the model (streams are split at barriers and observations when processing the access model). Stream lengths used for gradient calculation can thus be changed if an observation or barrier is added to the database, breaking an existing segment into smaller segments (this results in small inconsistencies to habitat outputs for a given area over time, a known limitation of the current model).</p>
+<p>Per species spawning/rearing gradient thresholds were taken from the literature and, where unavailable in the literature, derived from known fish spawning locations.</p>
+<p>Gradient of each stream segment is calculated as rise over run. Rise is taken from the Z value (elevation) of the endpoints of the stream segments. Run is the length of the steam segments.<br />
+Stream segments are BC Freshwater Atlas stream network features, further subdivided by other stream-referenced features used in the model (when processing the access model, streams are split at natural barriers, anthropogenic crossings, and at locations of FISS observations of species listed <a class="reference external" href="https://github.com/smnorris/bcfishpass/blob/main/model/01_access/sql/load_observations.sql">here</a> - currently <code class="docutils literal notranslate"><span class="pre">BT</span></code>,<code class="docutils literal notranslate"><span class="pre">CH</span></code>,<code class="docutils literal notranslate"><span class="pre">CM</span></code>,<code class="docutils literal notranslate"><span class="pre">CO</span></code>,<code class="docutils literal notranslate"><span class="pre">CT</span></code>,<code class="docutils literal notranslate"><span class="pre">DV</span></code>,<code class="docutils literal notranslate"><span class="pre">GR</span></code>,<code class="docutils literal notranslate"><span class="pre">PK</span></code>,<code class="docutils literal notranslate"><span class="pre">RB</span></code>,<code class="docutils literal notranslate"><span class="pre">SK</span></code>,<code class="docutils literal notranslate"><span class="pre">ST</span></code>,<code class="docutils literal notranslate"><span class="pre">WCT</span></code>).</p>
+<p>Note that stream lengths and resulting gradient will change if a new natural barrier, anthropogenic crossing, or observation is added to the database - breaking an existing segment into smaller segments. These changes to gradient can result in small inconsistencies to modelled spawning/rearing outputs for a given area over time.</p>
 </section>
-<section id="channel-width-discharge">
-<h2>Channel width / discharge<a class="headerlink" href="#channel-width-discharge" title="Link to this heading"></a></h2>
-<p>Spawning and rearing activity depends on sufficent flow to the stream. <code class="docutils literal notranslate"><span class="pre">bcfishpass</span></code> can be configured to use either mean annual discharge (m3/s) or channel width (m) (as a discharge proxy), depending on data availability and/or user preference. Per species spawning and rearing discharge/channel width thresholds are taken from the literature and, where unavailable in the literature, derived from known fish spawning locations.</p>
-<p>Discharge is modelled within the Fraser, Columbia and Peace basins:
-https://www.pacificclimate.org/data/gridded-hydrologic-model-output
-https://github.com/smnorris/bcfishpass/blob/main/model/02_habitat_linear/discharge</p>
-<p>Channel width is modelled for all of BC:
-https://www.poissonconsulting.ca/temporary-hidden-link/859859031/channel-width-21b/
-https://github.com/smnorris/bcfishpass/tree/main/model/02_habitat_linear/channel_width</p>
-<p>Note that results from the above models are only valid for streams with 100% of their contributing area with BC - data for contributing area and precipitiation are both cut off at the BC border.</p>
+<section id="discharge-channel-width">
+<h2>Discharge / channel width<a class="headerlink" href="#discharge-channel-width" title="Link to this heading"></a></h2>
+<p>Spawning and rearing activity depends on sufficent flow to the stream. <code class="docutils literal notranslate"><span class="pre">bcfishpass</span></code> can be configured to use either mean annual discharge (m3/s) or channel width (m) (as a discharge proxy), depending on data availability and/or user preference.
+Per species spawning and rearing discharge/channel width thresholds are taken from the literature and, where unavailable in the literature, derived from known fish spawning locations.</p>
+<p>Discharge is modelled within the Fraser, Columbia and Peace basins:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.pacificclimate.org/data/gridded-hydrologic-model-output">PCIC source</a></p></li>
+<li><p><a class="reference external" href="https://github.com/smnorris/fwapg/tree/main/extras/discharge">upsampling of source to FWA streams</a></p></li>
+</ul>
+<p>Channel width is modelled for all of BC:</p>
+<ul class="simple">
+<li><p><a class="reference external" href="https://www.poissonconsulting.ca/temporary-hidden-link/859859031/channel-width-21b/">Poisson Consulting</a> model based on upstream area / precipitation</p></li>
+<li><p><a class="reference external" href="https://github.com/smnorris/fwapg/tree/main/extras/channel_width">data collection/preparation</a></p></li>
+</ul>
+<p><strong>NOTE</strong> contributing area (FWA watersheds) and precipitiation (ClimateBC) datasets used to model discharge / channel width are both cut off at the BC border:</p>
+<ul class="simple">
+<li><p><em>all results from the above models are only valid for streams with 100% of their contributing area with BC</em></p></li>
+<li><p><em>streams with contributing area outside of BC (and thus with invalid spawning/rearing models) ARE NOT CURRENTLY NOTED in model outputs/file distributions</em></p></li>
+</ul>
 </section>
-<section id="connectivity-feature-type">
-<h2>Connectivity / feature type<a class="headerlink" href="#connectivity-feature-type" title="Link to this heading"></a></h2>
+<section id="feature-type-and-connectivity">
+<h2>Feature type and connectivity<a class="headerlink" href="#feature-type-and-connectivity" title="Link to this heading"></a></h2>
+<p>For various species and life stages, further filtering of streams to model as potential spawning/rearing habitat (based on gradient and discharge/channel width) is applied via feature type and connectivity criteria:</p>
+<table class="docutils align-default">
+<thead>
+<tr class="row-odd"><th class="head"><p>Species</p></th>
+<th class="head"><p>Life stage</p></th>
+<th class="head"><p>Additional feature type and connectivity criteria</p></th>
+</tr>
+</thead>
+<tbody>
+<tr class="row-even"><td><p>Bull Trout</p></td>
+<td><p>spawning</p></td>
+<td><p>within streams/rivers</p></td>
+</tr>
+<tr class="row-odd"><td><p>Bull Trout</p></td>
+<td><p>rearing</p></td>
+<td><p>within streams/rivers AND ( <br> on spawning stream OR <br> downstream of spawning stream OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope &gt;=5% between the spawning and potential rearing <br>)</p></td>
+</tr>
+<tr class="row-even"><td><p>Chinook</p></td>
+<td><p>spawning</p></td>
+<td><p>within streams/rivers</p></td>
+</tr>
+<tr class="row-odd"><td><p>Chinook</p></td>
+<td><p>rearing</p></td>
+<td><p>(within streams/rivers OR wetland) AND (<br> on spawning stream OR downstream of spawning stream OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope exceeding 5% between the spawning and potential rearing <br> )<br>  <strong>Note</strong> - <em>Chinook rearing in wetlands is not initially restricted by gradient and discharge/channel width</em></p></td>
+</tr>
+<tr class="row-even"><td><p>Chum</p></td>
+<td><p>spawning</p></td>
+<td><p>within streams/rivers</p></td>
+</tr>
+<tr class="row-odd"><td><p>Chum</p></td>
+<td><p>rearing</p></td>
+<td><p>No rearing modelled (this species does not generally rear in fresh water)</p></td>
+</tr>
+<tr class="row-even"><td><p>Coho</p></td>
+<td><p>spawning</p></td>
+<td><p>within streams/rivers</p></td>
+</tr>
+<tr class="row-odd"><td><p>Coho</p></td>
+<td><p>rearing</p></td>
+<td><p>within streams/rivers AND ( <br> on spawning stream OR <br> downstream of spawning stream OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope exceeding 5% between the spawning and potential rearing <br> )</p></td>
+</tr>
+<tr class="row-even"><td><p>Pink</p></td>
+<td><p>spawning</p></td>
+<td><p>within streams/rivers</p></td>
+</tr>
+<tr class="row-odd"><td><p>Pink</p></td>
+<td><p>rearing</p></td>
+<td><p>No rearing modelled (this species does not generally rear in fresh water)</p></td>
+</tr>
+<tr class="row-even"><td><p>Sockeye</p></td>
+<td><p>spawning</p></td>
+<td><p>within streams/rivers AND ( <br> &lt;3km downstream of rearing lake, with no stream segment of slope &gt;=5% between the rearing lake and the potential spawning stream OR <br> upstream of the rearing lake and connected to the rearing lake (within 2m) <br>)</p></td>
+</tr>
+<tr class="row-odd"><td><p>Sockeye</p></td>
+<td><p>rearing</p></td>
+<td><p>lakes of &gt;= 2km2</p></td>
+</tr>
+<tr class="row-even"><td><p>Steelhead</p></td>
+<td><p>spawning</p></td>
+<td><p>within streams/rivers</p></td>
+</tr>
+<tr class="row-odd"><td><p>Steelhead</p></td>
+<td><p>rearing</p></td>
+<td><p>within streams/rivers AND ( <br> on spawning stream OR <br> downstream of spawning stream OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope exceeding 5% between the spawning and potential rearing <br> )</p></td>
+</tr>
+<tr class="row-even"><td><p>Westslope Cutthroat Trout</p></td>
+<td><p>spawning</p></td>
+<td><p>within streams/rivers</p></td>
+</tr>
+<tr class="row-odd"><td><p>Westslope Cutthroat Trout</p></td>
+<td><p>rearing</p></td>
+<td><p>within streams/rivers AND ( <br> on spawning stream OR <br> downstream of spawning stream OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope exceeding 5% between the spawning and potential rearing <br> )</p></td>
+</tr>
+</tbody>
+</table>
 </section>
 </section>
 
@@ -120,7 +209,7 @@ https://github.com/smnorris/bcfishpass/tree/main/model/02_habitat_linear/channel
           </div>
           <footer><div class="rst-footer-buttons" role="navigation" aria-label="Footer">
         <a href="02_model_access.html" class="btn btn-neutral float-left" title="Access model" accesskey="p" rel="prev"><span class="fa fa-arrow-circle-left" aria-hidden="true"></span> Previous</a>
-        <a href="04_model_habitat_lateral.html" class="btn btn-neutral float-right" title="&lt;no title&gt;" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
+        <a href="04_model_habitat_lateral.html" class="btn btn-neutral float-right" title="Lateral habitat model (DRAFT)" accesskey="n" rel="next">Next <span class="fa fa-arrow-circle-right" aria-hidden="true"></span></a>
     </div>
 
   <hr/>
