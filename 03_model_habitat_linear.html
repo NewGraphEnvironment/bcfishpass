@@ -1,3 +1,5 @@
+
+
 <!DOCTYPE html>
 <html class="writer-html5" lang="en" data-content_root="./">
 <head>
@@ -6,19 +8,15 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Linear spawning/rearing habitat model &mdash; bcfishpass v0.5.0 documentation</title>
       <link rel="stylesheet" type="text/css" href="_static/pygments.css?v=80d5e7a1" />
-      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=19f00094" />
+      <link rel="stylesheet" type="text/css" href="_static/css/theme.css?v=e59714d7" />
       <link rel="stylesheet" type="text/css" href="_static/css/custom.css?v=929716b1" />
 
   
-  <!--[if lt IE 9]>
-    <script src="_static/js/html5shiv.min.js"></script>
-  <![endif]-->
-  
-        <script src="_static/jquery.js?v=5d32c60e"></script>
-        <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
-        <script src="_static/documentation_options.js?v=e663822d"></script>
-        <script src="_static/doctools.js?v=9a2dae69"></script>
-        <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
+      <script src="_static/jquery.js?v=5d32c60e"></script>
+      <script src="_static/_sphinx_javascript_frameworks_compat.js?v=2cd50e6c"></script>
+      <script src="_static/documentation_options.js?v=e663822d"></script>
+      <script src="_static/doctools.js?v=9bcbadda"></script>
+      <script src="_static/sphinx_highlight.js?v=dc90522c"></script>
     <script src="_static/js/theme.js"></script>
     <link rel="index" title="Index" href="genindex.html" />
     <link rel="search" title="Search" href="search.html" />
@@ -52,7 +50,7 @@
 <li class="toctree-l1 current"><a class="current reference internal" href="#">Linear spawning/rearing habitat model</a><ul>
 <li class="toctree-l2"><a class="reference internal" href="#gradient">Gradient</a></li>
 <li class="toctree-l2"><a class="reference internal" href="#discharge-channel-width">Discharge / channel width</a></li>
-<li class="toctree-l2"><a class="reference internal" href="#feature-type-and-connectivity">Feature type and connectivity</a></li>
+<li class="toctree-l2"><a class="reference internal" href="#feature-type-and-network-connectivity">Feature type and network connectivity</a></li>
 </ul>
 </li>
 <li class="toctree-l1"><a class="reference internal" href="04_model_habitat_lateral.html">Lateral habitat model (DRAFT)</a></li>
@@ -91,8 +89,8 @@
 <ul class="simple">
 <li><p>stream gradient</p></li>
 <li><p>channel width or discharge (depending on modelling requirments and/or data availability)</p></li>
-<li><p>connectivity (rearing streams must be connected to spawning streams)</p></li>
-<li><p>feature type (spawning or rearing occurs in stream / wetland / lake etc)</p></li>
+<li><p>network connectivity (rearing stream segments must have a specific type of connectivity to spawning stream segments)</p></li>
+<li><p>feature type (whether spawning/rearing occurs in stream / wetland / lake etc)</p></li>
 </ul>
 <p>Per species threshold values for stream gradient and discharge/channel width are noted (and can be adjusted) in the file <a class="reference external" href="https://github.com/smnorris/bcfishpass/blob/main/parameters/example_testing/parameters_habitat_thresholds.csv">parameters_habitat_thresholds.csv</a>.</p>
 <p>Sources for these values for Pacific salmon and steelhead are documented in Table 1 of <a class="reference external" href="https://cwf-fcf.org/en/resources/research-papers/BC_report_formatted_final.pdf">Rebelatto et al (2024)</a>. Gradient and discharge thresholds are derived from the literature and from analysis of known spawning stream characteristics. Channel width thresholds are designed to eliminate very small streams from consideration. Note that the models will tend to retain many streams that may be of marginal habitat; outputs should be used to assist prioritization for further assessment and fish passage work - not as a definitive habitat classification.</p>
@@ -129,9 +127,9 @@ Per species spawning and rearing discharge/channel width thresholds are taken fr
 </li>
 </ol>
 </section>
-<section id="feature-type-and-connectivity">
-<h2>Feature type and connectivity<a class="headerlink" href="#feature-type-and-connectivity" title="Link to this heading"></a></h2>
-<p>For various species and life stages, further filtering of streams to model as potential spawning/rearing habitat (based on gradient and discharge/channel width) is applied via feature type and connectivity criteria:</p>
+<section id="feature-type-and-network-connectivity">
+<h2>Feature type and network connectivity<a class="headerlink" href="#feature-type-and-network-connectivity" title="Link to this heading"></a></h2>
+<p>Before a segment can be modelled as spawning or rearing, segments with suitable gradient and discharge/channel width are further filtered by feature type and network connectivity. These criteria vary by species and life stage:</p>
 <table class="docutils align-default">
 <thead>
 <tr class="row-odd"><th class="head"><p>Species</p></th>
@@ -146,7 +144,7 @@ Per species spawning and rearing discharge/channel width thresholds are taken fr
 </tr>
 <tr class="row-odd"><td><p>Bull Trout</p></td>
 <td><p>rearing</p></td>
-<td><p>within streams/rivers AND ( <br> on spawning stream OR <br> downstream of spawning stream OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope &gt;=5% between the spawning and potential rearing <br>)</p></td>
+<td><p>within streams/rivers AND ( <br> on spawning segment OR <br> downstream of spawning segment OR <br> on a tributary downstream of a spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of any spawning with no stream segment of slope &gt;=5% between the spawning and potential rearing <br>)</p></td>
 </tr>
 <tr class="row-even"><td><p>Chinook</p></td>
 <td><p>spawning</p></td>
@@ -154,7 +152,7 @@ Per species spawning and rearing discharge/channel width thresholds are taken fr
 </tr>
 <tr class="row-odd"><td><p>Chinook</p></td>
 <td><p>rearing</p></td>
-<td><p>(within streams/rivers OR wetland) AND (<br> on spawning stream OR downstream of spawning stream OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope exceeding 5% between the spawning and potential rearing <br> )<br>  <strong>Note</strong> - <em>Chinook rearing in wetlands is not initially restricted by gradient and discharge/channel width</em></p></td>
+<td><p>within streams/rivers AND ( <br> on spawning segment OR <br> downstream of spawning segment OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope exceeding 5% between the spawning and potential rearing <br> )</p></td>
 </tr>
 <tr class="row-even"><td><p>Chum</p></td>
 <td><p>spawning</p></td>
@@ -170,7 +168,7 @@ Per species spawning and rearing discharge/channel width thresholds are taken fr
 </tr>
 <tr class="row-odd"><td><p>Coho</p></td>
 <td><p>rearing</p></td>
-<td><p>within streams/rivers AND ( <br> on spawning stream OR <br> downstream of spawning stream OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope exceeding 5% between the spawning and potential rearing <br> )</p></td>
+<td><p>(within streams/rivers OR wetland) AND (<br> on spawning segment OR downstream of spawning segment OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope exceeding 5% between the spawning and potential rearing <br> )<br>  <strong>Note</strong> - <em>Coho rearing in wetlands is not initially restricted by gradient and discharge/channel width</em></p></td>
 </tr>
 <tr class="row-even"><td><p>Pink</p></td>
 <td><p>spawning</p></td>
@@ -182,7 +180,7 @@ Per species spawning and rearing discharge/channel width thresholds are taken fr
 </tr>
 <tr class="row-even"><td><p>Sockeye</p></td>
 <td><p>spawning</p></td>
-<td><p>within streams/rivers AND ( <br> &lt;3km downstream of rearing lake, with no stream segment of slope &gt;=5% between the rearing lake and the potential spawning stream OR <br> upstream of the rearing lake and connected to the rearing lake (within 2m) <br>)</p></td>
+<td><p>within streams/rivers AND ( <br> &lt;3km downstream of rearing lake, with no stream segment of slope &gt;=5% between the rearing lake and the potential spawning stream OR <br> upstream of the rearing lake and composed of segment(s) adjacent to the rearing lake (within 2m) <br>)</p></td>
 </tr>
 <tr class="row-odd"><td><p>Sockeye</p></td>
 <td><p>rearing</p></td>
@@ -194,7 +192,7 @@ Per species spawning and rearing discharge/channel width thresholds are taken fr
 </tr>
 <tr class="row-odd"><td><p>Steelhead</p></td>
 <td><p>rearing</p></td>
-<td><p>within streams/rivers AND ( <br> on spawning stream OR <br> downstream of spawning stream OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope exceeding 5% between the spawning and potential rearing <br> )</p></td>
+<td><p>within streams/rivers AND ( <br> on spawning segment OR <br> downstream of spawning segment OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope exceeding 5% between the spawning and potential rearing <br> )</p></td>
 </tr>
 <tr class="row-even"><td><p>Westslope Cutthroat Trout</p></td>
 <td><p>spawning</p></td>
@@ -202,7 +200,7 @@ Per species spawning and rearing discharge/channel width thresholds are taken fr
 </tr>
 <tr class="row-odd"><td><p>Westslope Cutthroat Trout</p></td>
 <td><p>rearing</p></td>
-<td><p>within streams/rivers AND ( <br> on spawning stream OR <br> downstream of spawning stream OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope exceeding 5% between the spawning and potential rearing <br> )</p></td>
+<td><p>within streams/rivers AND ( <br> on spawning segment OR <br> downstream of spawning segment OR <br> on a tributary downstream of spawning and beginning within 10m of the tributary OR <br> &lt;10km upstream of spawning with no stream segment of slope exceeding 5% between the spawning and potential rearing <br> )</p></td>
 </tr>
 </tbody>
 </table>
