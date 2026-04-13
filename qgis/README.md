@@ -1,32 +1,18 @@
 # QGIS
 
+
 ## bcfishpass_30k.qlr
 
 This is a QGIS layer file defining and symbolizing all layers required for general fish passage mapping ([see samples](https://www.hillcrestgeo.ca/outgoing/fishpassage/projects/)).
 
-Generally QGIS works well with large provincial datasets, but in your database connection settings, remember to check:
+### Database connection
+
+All postgis layers in the .qlr file are connected via the `bcfishpass` postgresql service. To add the service, modify the parameters for the `bcfishpass` service in the provided `.pg_service_example.conf` file to match the parameters for your database connection. Then move the file to the [location expected for your operating system](https://www.postgresql.org/docs/current/libpq-pgservice.html).
+
+With the service configuration file in place, open QGIS, right click on PostgreSQL in the Browser and select 'New Connection'. In the dialogue box, enter `bcfishpass` as the Service and give the connection a name.  To help with handling large tables, check these options:
 
     [x] Don't resolve types of unrestricted columns (GEOMETRY)
     [x] Use estimated table metadata
-
-
-### Load additional base data
-
-The QGIS layer file includes several data sources that are not loaded to the `bcfishpass` database by default.
-
-To download these additional sources to the postgres db specified by `$DATABASE_URL`:
-
-    make
-
-The makefile downloads most layers provincially, but contours are split up into chunks (1:250k tiles).
-To minimize bandwidth use, consider editing `tctr_tiles.txt` to include only the NTS 250k tiles within your area of interest.
-
-### Change data sources
-
-`bcfishpass` database connection is set as `postgresql://postgres@localhost:5432/bcfishpass`.
-If your database connection parameters differ:
-- install [`changeDataSource`](https://geogear.wordpress.com/2016/01/29/changedatasourceplugin-plugin-release-2-0/) plugin
-- modify the database connection parameters for all `bcfishpass` layers using the find and replace boxes
 
 
 ## 48x36 30k pdfs

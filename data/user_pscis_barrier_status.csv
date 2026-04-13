@@ -5,8 +5,8 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 3142,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 3143,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 57760,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-57761,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-57763,BARRIER,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
+57761,PASSABLE,BULK,LB,2024-02-27,"Based on assessment comments, structure is a ford and no fish passage concerns"
+57763,PASSABLE,BULK,LB,2024-02-27,"Previous fix made in error, update fix table entry to passable"
 57764,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 57766,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 57767,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -120,7 +120,7 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 58119,BARRIER,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 58120,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 58121,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-58122,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
+58122,PASSABLE,BULK,LB,2024-02-27,"Based on assessment comments, structure is a ford and no fish passage concerns"
 58123,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 58124,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 58127,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -412,7 +412,6 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 195285,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 195286,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 195287,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-195289,PASSABLE,BULK,SN,2021-01-01,reassessment (Irvine 2020)
 195293,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 195294,BARRIER,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 195295,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -548,7 +547,7 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 195941,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 195942,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 195945,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-195950,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
+195950,PASSABLE,BULK,LB,2024-02-27,"Based on assessment comments, structure is a ford and no fish passage concerns"
 195958,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 195959,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 195961,PASSABLE,BULK,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -614,7 +613,6 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 50115,BARRIER,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 50116,PASSABLE,ELKR,CWF,2021-01-01,NJObased on assessment comments (and imagery review where required)
 50117,PASSABLE,ELKR,CWF,2021-01-01,NJO - based on assessment comments (and imagery review where required)
-50118,POTENTIAL,ELKR,CWF,2021-01-01,NJO - Step pools present - natural barrier? (based on assessment comments (and imagery review where required)
 50119,BARRIER,ELKR,CWF,2021-01-01,NJO - large culvert - flag for review (based on assessment comments (and imagery review where required)
 50120,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 50121,PASSABLE,ELKR,CWF,2021-01-01,NJO - based on assessment comments (and imagery review where required)
@@ -640,11 +638,9 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 50142,BARRIER,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 50143,PASSABLE,ELKR,CWF,2021-01-01,NJO - based on assessment comments (and imagery review where required)
 50144,PASSABLE,ELKR,CWF,2021-01-01,NJO - based on assessment comments (and imagery review where required)
-50145,POTENTIAL,ELKR,CWF,2021-01-01,NJO - based on assessment comments (and imagery review where required)
 50146,PASSABLE,ELKR,CWF,2021-01-01,NJO - based on assessment comments (and imagery review where required)
 50147,PASSABLE,ELKR,CWF,2021-01-01,NJO - based on assessment comments (and imagery review where required)
 50148,BARRIER,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-50149,POTENTIAL,ELKR,CWF,2021-01-01,NJO - based on assessment comments (and imagery review where required)
 50150,PASSABLE,ELKR,CWF,2021-01-01,NJO - based on assessment comments (and imagery review where required)
 50151,PASSABLE,ELKR,CWF,2021-01-01,NJO - based on assessment comments (and imagery review where required)
 50152,BARRIER,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -664,7 +660,6 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 50170,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 50171,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 50172,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-50173,POTENTIAL,ELKR,CWF,2021-01-01,NJO - Flag for review - based on assessment comments (and imagery review where required)
 50175,BARRIER,ELKR,CWF,2021-01-01,NJO - Flag for review - based on assessment comments (and imagery review where required)
 50176,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 50177,BARRIER,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -734,7 +729,7 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 50258,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 50260,BARRIER,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 50261,BARRIER,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-50263,POTENTIAL,ELKR,CWF,2021-01-01,NJO - based on assessment comments (and imagery review where required)
+50263,PASSABLE,ELKR,MC,2024-03-27,Ford crossing based on assessment
 50264,PASSABLE,ELKR,CWF,2021-01-01,NJO - based on assessment comments (and imagery review where required)
 50265,POTENTIAL,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 50266,POTENTIAL,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -769,7 +764,7 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 61498,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 61500,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 61503,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-61504,BARRIER,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
+61504,PASSABLE,ELKR,MC,2025-03-24,2025 Trib review
 61513,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 61519,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 61527,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -784,7 +779,6 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 61632,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 61635,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 61636,PASSABLE,ELKR,CWF,2021-01-01,NJO - Flag for review - based on assessment comments (and imagery review where required)
-61637,BARRIER,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 62123,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 62134,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 62135,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -805,7 +799,6 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 62176,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 62177,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 62183,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-62184,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 62289,BARRIER,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 62290,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 62291,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -813,8 +806,6 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 62412,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 62417,BARRIER,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 62419,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-62421,PASSABLE,ELKR,SN,2021-01-01,crossing has been remediated but PSCIS has not been updated (Irvine Elk report 2021)
-62422,PASSABLE,ELKR,SN,2021-01-01,crossing has been remediated but PSCIS has not been updated (Irvine Elk report 2021)
 62424,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 62431,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 62433,PASSABLE,ELKR,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -1036,7 +1027,6 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 123933,PASSABLE,HORS,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 123934,BARRIER,HORS,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 123935,BARRIER,HORS,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-123937,PASSABLE,HORS,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 123938,PASSABLE,HORS,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 123941,PASSABLE,HORS,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 123944,BARRIER,HORS,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -1243,7 +1233,7 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 196941,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 196944,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 196945,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-196947,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
+196947,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
 196957,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 196964,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 196971,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
@@ -1251,28 +1241,27 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 196974,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 196975,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 196978,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-196981,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
+196981,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
 196983,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 196984,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-196985,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
+196985,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
 196998,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 197003,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 197004,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-197005,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-197007,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-197009,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
+197005,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
+197007,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
+197009,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
 197012,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-197015,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-197016,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-197028,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-197029,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
+197015,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
+197016,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
+197028,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
+197029,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
 197030,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 197032,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 197033,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 197034,PASSABLE,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
 197038,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-197040,BARRIER,LNIC,CWF,2021-01-01,based on assessment comments (and imagery review where required)
-3138,BARRIER,BULK,AI,2021-01-01,"error in crossing_type_description.  Should be ""Closed Bottom Structure"""
+197040,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
 197535,PASSABLE,ELKR,NJO,2021-01-01,Manual review
 197536,PASSABLE,ELKR,NJO,2021-01-01,Manual review
 197727,PASSABLE,ELKR,NJO,2021-01-01,Manual review
@@ -1283,5 +1272,96 @@ stream_crossing_id,user_barrier_status,watershed_group_code,reviewer_name,review
 50179,PASSABLE,ELKR,NMW,2021-01-01,Manual review
 50186,PASSABLE,ELKR,NMW,2021-01-01,Manual review; deactivated
 50174,PASSABLE,ELKR,NMW,2021-01-01,Manual review; deactivated
-57596,PASSABLE,HORS,NMW,2021-01-01,"Field assessment, no structure"
 57470,PASSABLE,HORS,NMW,2021-01-01,"Actually a PSCIS location issue, but temporary fix for Horsefly workshop updates"
+197763,PASSABLE,HORS,TMK,2022-11-28,ford
+197761,PASSABLE,HORS,TMK,2022-11-28,ford crossing
+123776,PASSABLE,BULK,TMK,2022-12-20,recent bridge replacement
+197955,PASSABLE,BULK,TMK,2022-12-20,ford
+197914,PASSABLE,BULK,TMK,2022-12-20,ford crossing
+197964,PASSABLE,BULK,TMK,2022-12-20,based on assessment comments (and imagery review where required)
+197913,PASSABLE,BULK,TMK,2022-12-20,ford crossing
+1006800298,PASSABLE,HORS,TMK,2022-02-07,no crossing
+1006800581,PASSABLE,HORS,TMK,2022-02-07,passable in PSCIS
+1006801130,PASSABLE,HORS,TMK,2022-02-07,no crossing
+1006801356,PASSABLE,HORS,TMK,2022-02-07,no crossing
+195672,PASSABLE,BOWR,SS,2023-01-31,Imagery Review
+195712,PASSABLE,BOWR,SS,2023-01-31,"Manual review, Imagery Review"
+195632,PASSABLE,BOWR,SS,2023-01-31,Imagery Review
+195652,PASSABLE,BOWR,SS,2023-01-31,Ford Crossing; Imagery Review
+195640,PASSABLE,BOWR,SS,2023-01-31,Ford Crossing; Imagery Review
+197888,PASSABLE,LNIC,TMK,2023-01-31,Ford Crossing
+57621,PASSABLE,PARS,MW,2023-08-11,Bridge; Imagery Review
+6731,PASSABLE,PARS,MW,2023-08-14,Bridge; Imagery Review
+125204,PASSABLE,PARS,MW,2023-08-14,Bridge; Imagery Review
+197962,PASSABLE,MORR,MW,2023-08-21,Bridge; Imagery Review
+198872,PASSABLE,HORS,MC,2024-03-14,"Abandoned culvert in stream, but is not a barrier. Also 197761 is a duplicate PCSIS point."
+198109,PASSABLE,BULK,LB,2024-04-03,"PSCIS comments indicate a transmission line with a ford, but no crossing structure."
+198111,PASSABLE,BULK,LB,2024-04-03,"PSCIS comments indicate it is a walking trail with a ford, but no crossing structure."
+57944,POTENTIAL,BULK,LB,2024-04-03,Based on local knowledge this structure should be classified as potential.
+123446,POTENTIAL,BULK,LB,2024-04-03,Based on local knowledge this structure should be classified as potential.
+195944,POTENTIAL,BULK,LB,2024-04-03,Based on local knowledge this structure should be classified as potential.
+197663,POTENTIAL,BULK,LB,2024-04-03,PSCIS assessment comment indicates this structure is a potential barrier.
+197976,POTENTIAL,BULK,LB,2024-04-03,PSCIS assessment comment indicates this structure is a potential barrier.
+123770,POTENTIAL,BULK,LB,2024-04-03,Based on local knowledge this structure should be classified as potential.
+197018,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
+197017,PASSABLE,LNIC,LB,2024-04-09,"This is a ford, PSCIS barrier_status = UNKNOWN, edit existing record in fix table to PASSABLE"
+196200,PASSABLE,TABR,SN,2024-06-03,"Crossing has been remediated, see https://news.gov.bc.ca/releases/2020TRAN0099-001219"
+196223,PASSABLE,TABR,SN,2024-06-03,Imagery clearly shows crossing has been remediated with a bridge installation
+197664,POTENTIAL,BULK,LB,2024-06-13,Updated to potential barrier for CWF WCRP reporting
+197665,POTENTIAL,BULK,LB,2024-06-13,Updated to potential barrier for CWF WCRP reporting
+197823,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197824,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197826,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197563,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197803,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197805,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197816,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197818,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197819,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197820,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197821,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197822,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197846,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197847,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197831,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197837,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197838,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197839,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197788,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197789,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197790,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197791,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197801,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197804,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197797,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197808,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197811,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197841,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197856,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197858,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+197860,PASSABLE,ELKR,MC,2024-06-27,Ford crossing based on assessment
+62245,PASSABLE,ELKR,MC,2024-06-27,This crossing has been rehabilitated
+62293,POTENTIAL,ELKR,MC,2024-06-27,"Channel blew out and formed a new channel through road. Not clear if this ""ford"" is passable."
+124249,BARRIER,HORS,MC,2024-09-26,Scores as passable because currently backwatered by impassable beaver dam. Undersized. This is a barrier.
+197834,PASSABLE,ELKR,MC,2025-03-24,2025 Trib review
+197833,PASSABLE,ELKR,MC,2025-03-24,2025 Trib review
+197827,POTENTIAL,ELKR,MC,2025-03-24,2025 Trib review
+6718,PASSABLE,NATR,LS,2025-07-04,"This crossing has been replaced with a bridge, based on aerial imagery review."
+57596,BARRIER,HORS,MC,2025-07-25,Collapsed bridge has created log jam that is barrier to fish passage
+123937,POTENTIAL,HORS,MC,2025-07-25,Collapsed woodbox culvert is classified as a potential barrier
+195476,POTENTIAL,BULK,LB,2025-07-31,PSCIS notes (2014) indicate blockage at outlet
+198300,BARRIER,HORS,MC,2025-08-13,Biologist review
+196195,PASSABLE,TABR,LS,2025-07-22,"This crossing has been replaced with a bridge, based on aerial imagery review."
+196969,PASSABLE,LNIC,LB,2024-09-12,This crossing has been rehabilitated.
+197889,PASSABLE,LNIC,LB,2024-09-12,This crossing has been rehabilitated.
+124421,PASSABLE,BULK,LS,2025-11-20,This crossing has been removed and the road deactivated
+197882,BARRIER,LNIC,LB,2026-01-13,This crossing is considered a confirmed barrier by the working group.
+197884,BARRIER,LNIC,LB,2026-01-13,This crossing is considered a confirmed barrier by the working group.
+198873,BARRIER,HORS,MC,2026-01-29,Biologist review. Has a duplicate PSCIS point 197762 
+197762,BARRIER,HORS,MC,2026-01-29,Biologist review. Has a duplicate PSCIS point 198873 
+197883,PASSABLE,LNIC,LB,2026-01-30,this crossing is passable.
+126511,PASSABLE,HORS,MC,2026-02-06,Rehabilitated Structure
+57298,PASSABLE,HORS,MC,2026-02-06,Rehabilitated Structure
+126594,PASSABLE,HORS,MC,2026-02-06,Rehabilitated Structure
+125711,PASSABLE,STUL,LB,2026-03-30,imagery review via CWF WCRP QA/QC
+197554,PASSABLE,ELKR,MC,2026-04-01,Tracking table

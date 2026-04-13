@@ -1,0 +1,84 @@
+#!/bin/bash
+set -euxo pipefail
+
+#-------
+# monthly data refresh
+#-------
+
+PSQL="psql $DATABASE_URL -v ON_ERROR_STOP=1"
+
+# bcdata loads
+# ----
+jq -c '.[]' bcgw_sources.json | while read item; do
+    schedule=$(jq -r '.schedule' <<< "$item")
+    source=$(jq -r '.source' <<< "$item")
+    if [ "$schedule" == "M" ] ; then
+      echo "Loading $source from cache"
+
+      # this can fail without an exit 1, capture stderr
+      output=$(ogr2ogr -f PostgreSQL \
+        "PG:$DATABASE_URL" \
+        --config OGR_TRUNCATE=YES \
+        -append \
+        -preserve_fid \
+        -nln $source \
+        --config PG_USE_COPY=YES \
+        /vsicurl/https://nrs.objectstore.gov.bc.ca/bchamp/bcdata/$source.parquet \
+        $source 2>&1)
+
+        if [[ "$output" == *"ERROR"* ]]; then
+          echo "Error detected in command output: $output"
+          exit 1
+        fi
+    fi
+done
+
+# load DRA
+ogr2ogr -f PostgreSQL \
+  "PG:$DATABASE_URL" \
+  --config OGR_TRUNCATE=YES \
+  -append \
+  -preserve_fid \
+  -nln whse_basemapping.transport_line \
+  --config PG_USE_COPY=YES \
+  /vsicurl/https://nrs.objectstore.gov.bc.ca/bchamp/bcdata/whse_basemapping.transport_line.parquet \
+  whse_basemapping.transport_line
+
+#-------
+# refresh code tables - unlikely to change, but simple/quick to load
+#-------
+ogr2ogr \
+  -f PostgreSQL \
+  "PG:$DATABASE_URL" \
+  -append \
+  --config OGR_TRUNCATE YES \
+  -nln whse_basemapping.transport_line_type_code \
+  /vsicurl/https://nrs.objectstore.gov.bc.ca/bchamp/bcdata/whse_basemapping.transport_line_type_code.csv \
+  whse_basemapping.transport_line_type_code
+
+ogr2ogr \
+  -f PostgreSQL \
+  "PG:$DATABASE_URL" \
+  -append \
+  --config OGR_TRUNCATE YES \
+  -nln whse_basemapping.transport_line_surface_code \
+  /vsicurl/https://nrs.objectstore.gov.bc.ca/bchamp/bcdata/whse_basemapping.transport_line_surface_code.csv \
+  whse_basemapping.transport_line_surface_code
+
+ogr2ogr \
+  -f PostgreSQL \
+  "PG:$DATABASE_URL" \
+  -append \
+  --config OGR_TRUNCATE YES \
+  -nln whse_basemapping.transport_line_divided_code \
+  /vsicurl/https://nrs.objectstore.gov.bc.ca/bchamp/bcdata/whse_basemapping.transport_line_divided_code.csv \
+  whse_basemapping.transport_line_divided_code
+
+ogr2ogr \
+  -f PostgreSQL \
+  "PG:$DATABASE_URL" \
+  -append \
+  --config OGR_TRUNCATE YES \
+  -nln whse_basemapping.transport_line_structure_code \
+  /vsicurl/https://nrs.objectstore.gov.bc.ca/bchamp/bcdata/whse_basemapping.transport_line_structure_code.csv \
+  whse_basemapping.transport_line_structure_code

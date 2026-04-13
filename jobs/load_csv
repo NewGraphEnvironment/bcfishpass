@@ -1,0 +1,23 @@
+#!/bin/bash
+set -euxo pipefail
+
+#-------
+# Load local bcfishpass data and parameters
+#-------
+
+PSQL="psql $DATABASE_URL -v ON_ERROR_STOP=1"
+
+$PSQL -c "truncate bcfishpass.parameters_habitat_method";
+$PSQL -c "truncate bcfishpass.parameters_habitat_thresholds";
+$PSQL -c "\copy bcfishpass.parameters_habitat_method FROM parameters/parameters_habitat_method.csv delimiter ',' csv header";
+$PSQL -c "\copy bcfishpass.parameters_habitat_thresholds FROM parameters/parameters_habitat_thresholds.csv delimiter ',' csv header";
+
+for table in data/*.csv; do
+  tablename=$(basename -- $table .csv)
+  $PSQL -c "TRUNCATE bcfishpass.$tablename";
+  if [ "$tablename" = "wcrp_watersheds" ]; then
+    $PSQL -c "\copy bcfishpass.$tablename (watershed_group_code, bt, ch, cm, co, pk, sk, st, wct, notes, wcrp) FROM $table delimiter ',' csv header"
+  else
+    $PSQL -c "\copy bcfishpass.$tablename FROM $table delimiter ',' csv header"
+  fi
+done

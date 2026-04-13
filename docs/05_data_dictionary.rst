@@ -1,0 +1,86 @@
+============================
+Data Dictionary
+============================
+
+Weekly bcfishpass data extracts are available for download as zipped geopackages.
+
+Access and linear habitat models included in this distribution are generated as described in the previous sections, with the following parameters:
+
+- for salmon, potential :ref:`gradient barriers <gradient_barriers>` are considered passable up to 15%
+- for steelhead, potential :ref:`gradient barriers <gradient_barriers>` are considered passable up to 20%
+- for both salmon and steelhead, potential natural barriers with 5 or more upstream observations of any of the target species (``CH, CM, CO, PK, SK, ST``) since January 01, 1990 are presumed to be passable
+
+Draft Bull Trout and Westslope Cutthroat Trout models are also included:
+
+- for Bull Trout, potential :ref:`gradient barriers <gradient_barriers>` are considered passable up to 25%
+- for Westslope Cutthroat Trout, potential :ref:`gradient barriers <gradient_barriers>` are considered passable up to 20%
+- for both Bull Trout and Westslope Cutthroat Trout, potential natural barriers are presumed to be passable if any observation(s) of the target species are found upstream
+
+Linear spawning/rearing habitat (intrinsic potential) parameters/methods are as specified by the Canadian Wildlife Federation:
+
+- `habitat thresholds <https://github.com/smnorris/bcfishpass/blob/main/parameters/example_cwf/parameters_habitat_thresholds.csv>`_
+- `watersheds and methods <https://github.com/smnorris/bcfishpass/blob/main/parameters/example_cwf/parameters_habitat_method.csv>`_
+
+Note that while stream discharge (m3/s) is used to model habitat in the Bulkley, Horsefly and Elk River watershed groups, proprietary data
+discharge was used. Discharge data is not provided in these files for those watershed groups.
+
+
+Files included in this data distribution are:
+
+- `bcfishpass_crossings.gpkg.zip <https://nrs.objectstore.gov.bc.ca/bchamp/bcfishpass_crossings.gpkg.zip>`_
+- `bcfishpass_streams.gpkg.zip <https://nrs.objectstore.gov.bc.ca/bchamp/bcfishpass_streams.gpkg.zip>`_
+- `bcfishpass_streams_summary.csv <https://nrs.objectstore.gov.bc.ca/bchamp/bcfishpass_streams_summary.csv>`_
+
+Note that draft lateral habitat modelling is not included - this is available on request.
+
+
+`crossings <https://nrs.objectstore.gov.bc.ca/bchamp/bcfishpass_crossings.gpkg.zip>`_ (points)
+============================
+
+Road-stream crossings (and dams), including: tenure information; barrier status; upstream/downstream habitat lengths
+
+.. csv-table::
+   :file: tables/crossings_vw.csv
+   :header-rows: 1
+
+
+`streams <https://nrs.objectstore.gov.bc.ca/bchamp/bcfishpass_streams.gpkg.zip>`_ (lines)
+============================
+
+BC FWA stream network, with bcfishpass model classifications.
+
+.. csv-table::
+   :file: tables/streams_vw.csv
+   :header-rows: 1
+
+
+`streams_summary <https://nrs.objectstore.gov.bc.ca/bchamp/bcfishpass_streams_summary.csv>`_ (non-spatial)
+============================
+
+A `FWA Assessment Watershed <https://catalogue.data.gov.bc.ca/dataset/freshwater-atlas-assessment-watersheds>`_ level summary report of habitat
+and connectivity status for Pacific Salmon (Chinook, Chum, Coho, Pink, Sockeye), Steelhead, Bull Trout and Westslope Cutthroat Trout.
+The report summarizes total modelled naturally accessible length per species, and total modelled spawning/rearing accessible length per species.
+
+.. csv-table::
+   :file: tables/streams_summary.csv
+   :header-rows: 1
+
+pse_migration_paths (non-spatial)
+=================================
+Migration paths between modelled spawning/rearing in PSE Conservation Units and the ocean, represented by FWA stream network identifiers.
+
+| `https://nrs.objectstore.gov.bc.ca/bchamp/cu_migrationpaths_ch.csv.gz <https://nrs.objectstore.gov.bc.ca/bchamp/cu_migrationpaths_ch.csv.gz>`_
+| `https://nrs.objectstore.gov.bc.ca/bchamp/cu_migrationpaths_cm.csv.gz <https://nrs.objectstore.gov.bc.ca/bchamp/cu_migrationpaths_cm.csv.gz>`_
+| `https://nrs.objectstore.gov.bc.ca/bchamp/cu_migrationpaths_co.csv.gz <https://nrs.objectstore.gov.bc.ca/bchamp/cu_migrationpaths_co.csv.gz>`_
+| `https://nrs.objectstore.gov.bc.ca/bchamp/cu_migrationpaths_pk.csv.gz <https://nrs.objectstore.gov.bc.ca/bchamp/cu_migrationpaths_pk.csv.gz>`_
+| `https://nrs.objectstore.gov.bc.ca/bchamp/cu_migrationpaths_sk.csv.gz <https://nrs.objectstore.gov.bc.ca/bchamp/cu_migrationpaths_sk.csv.gz>`_
+| `https://nrs.objectstore.gov.bc.ca/bchamp/cu_migrationpaths_st.csv.gz <https://nrs.objectstore.gov.bc.ca/bchamp/cu_migrationpaths_st.csv.gz>`_
+
+
+.. csv-table::
+   :file: tables/cu_migration_paths.csv
+   :header-rows: 1
+
+Note that ``segmented_stream_id`` is based on FWA ``blue_line_key`` and ``downstream_route_measure`` for a given segment.
+When the segmentation by bcfishpass modelling changes, the ``segmented_stream_id`` will also change. When joining the migration paths
+to ``streams``, ensure both files were generated from the same model run.

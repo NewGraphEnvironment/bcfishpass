@@ -1,0 +1,104 @@
+name: ng-test-model
+run-name: ${{ github.actor }} Run bcfishpass on test
+on:
+  workflow_dispatch:
+  pull_request:
+    branches:
+      - 'main'
+    paths-ignore:
+      - 'data/**'
+      - 'db/**'
+concurrency:
+  group: ng-test
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+  SSH_USER: ${{ secrets.SSH_USER }}
+  SSH_KEY: ${{ secrets.SSH_KEY }}
+  SSH_HOST: ${{ secrets.SSH_HOST }}
+  AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+  AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+  AWS_ENDPOINT_URL: https://nrs.objectstore.gov.bc.ca
+  AWS_S3_ENDPOINT: nrs.objectstore.gov.bc.ca
+  AWS_VIRTUAL_HOSTING: FALSE
+  AWS_EC2_METADATA_DISABLED: True
+  CPL_VSISTDIN_BUFFER_LIMIT: -1
+jobs:
+  load-csv:
+    runs-on: ubuntu-latest
+    environment: ng-test
+    container: ghcr.io/smnorris/bcfishpass:main
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Load weekly refresh
+        run:  |
+          cp parameters/example_newgraph/*csv parameters/
+          jobs/connect
+          jobs/load_csv
+          cd jobs && ./load_weekly
+  load-xings-observations:
+    runs-on: ubuntu-latest
+    environment: ng-test
+    container: ghcr.io/smnorris/bcfishpass:main
+    needs: load-csv
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Load pre-processed data
+        run:  |
+          jobs/connect
+          jobs/load_modelled_stream_crossings
+          jobs/load_observations
+  model-access-natural:
+    runs-on: ubuntu-latest
+    environment: ng-test
+    container: ghcr.io/smnorris/bcfishpass:main
+    needs: load-xings-observations
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Access model - natural
+        run:  |
+          jobs/connect
+          cd model/01_access && ./01_model_access_natural.sh bt ch_cm_co_pk_sk ct_dv_rb st wct
+  model-access-anthropogenic:
+    runs-on: ubuntu-latest
+    environment: ng-test
+    container: ghcr.io/smnorris/bcfishpass:main
+    needs: model-access-natural
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Access model - anthropogenic
+        run:  |
+          jobs/connect
+          cd model/01_access && ./02_model_access_anthropogenic.sh
+  model-habitat-linear:
+    runs-on: ubuntu-latest
+    environment: ng-test
+    container: ghcr.io/smnorris/bcfishpass:main
+    needs: model-access-anthropogenic
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+        with:
+            fetch-tags: true
+            fetch-depth: 0
+      - name: Linear habitat model
+        run:  |
+          jobs/connect
+          git config --global --add safe.directory /__w/${{ github.event.repository.name }}/${{ github.event.repository.name }}
+          cd model/02_habitat_linear
+          ./habitat_linear.sh
+      - name: Summarize
+        run: |
+          jobs/connect
+          psql $DATABASE_URL -c "select * from bcfishpass.wsg_crossing_summary_current" --csv > wsg_crossing_summary_current.csv
+          psql $DATABASE_URL -c "select * from bcfishpass.wsg_linear_summary_current" --csv > wsg_linear_summary_current.csv
+          aws s3 cp wsg_crossing_summary_current.csv s3://bchamp/test/wsg_crossing_summary_current.csv --acl public-read
+          aws s3 cp wsg_linear_summary_current.csv s3://bchamp/test/wsg_linear_summary_current.csv --acl public-read
+          python jobs/compare_test_prod.py
+          aws s3 cp wsg_crossings_diff.csv s3://bchamp/test/wsg_crossings_diff.csv --acl public-read
+          aws s3 cp wsg_linear_diff.csv s3://bchamp/test/wsg_linear_diff.csv --acl public-read
+          aws s3 cp wsg_linear_diff.csv s3://bchamp/test/wsg_linear_pctdiff.csv --acl public-read

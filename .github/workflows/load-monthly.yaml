@@ -1,0 +1,63 @@
+name: load-monthly
+run-name: ${{ github.actor }} Monthly source data refresh
+on:
+  schedule:
+    - cron: '0 18 15 * *'
+  workflow_dispatch:
+env:
+  DATABASE_URL: ${{ secrets.DATABASE_URL }}
+  DATABASE_HOST: ${{ secrets.DATABASE_HOST }}
+  SSH_USER: ${{ secrets.SSH_USER }}
+  SSH_KEY: ${{ secrets.SSH_KEY }}
+  SSH_HOST: ${{ secrets.SSH_HOST }}
+jobs:
+  cwf-test:
+    runs-on: ubuntu-latest
+    environment: cwf-test
+    container: ghcr.io/smnorris/bcfishpass:main
+    concurrency:
+      group: cwf
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Load data
+        run: |
+          cd jobs && ./connect && ./load_monthly
+  cwf-prod:
+    runs-on: ubuntu-latest
+    environment: cwf-prod
+    container: ghcr.io/smnorris/bcfishpass:main
+    concurrency:
+      group: cwf
+    needs: cwf-test
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Load data
+        run: |
+          cd jobs && ./connect && ./load_monthly
+  ng-test:
+    runs-on: ubuntu-latest
+    environment: ng-test
+    container: ghcr.io/smnorris/bcfishpass:main
+    concurrency:
+      group: ng-test
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Load data
+        run: |
+          cd jobs && ./connect && ./load_monthly
+  ng-prod:
+    runs-on: ubuntu-latest
+    environment: ng-prod
+    container: ghcr.io/smnorris/bcfishpass:main
+    concurrency:
+      group: ng-prod
+    needs: ng-test
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v4
+      - name: Load data
+        run: |
+          cd jobs && ./connect && ./load_monthly

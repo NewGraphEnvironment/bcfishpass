@@ -24,8 +24,8 @@ model/**/data
 # docker postgres data folder
 postgres-data
 
-# qa folder
-qa/*csv
+# access model qa files
+model/01_access/qa/*csv
 
 # empty make targets
 .make/
@@ -33,9 +33,9 @@ qa/*csv
 # qgis
 *.qgs~
 
-# data dumps
-export/outputs
+# only include example parameters,
+# not whatever is being used for a given project/test
+parameters/parameters_habitat*.csv
 
-# ignore current parameters, just track param in subfolders
-parameters/param_habitat.csv
-parameters/param_watersheds.csv
+# postgres dump files
+*.dump

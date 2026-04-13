@@ -1,0 +1,709 @@
+# bcfishpass
+
+Aquatic connectivity / fish passage database for British Columbia. Tracks barriers, models stream accessibility by species, estimates spawning/rearing habitat, and supports prioritization of assessment and remediation.
+
+## Repository Context
+
+**Repository:** smnorris/bcfishpass
+**License:** Apache 2.0
+**Primary Languages:** SQL, Bash, Python
+**Database:** PostgreSQL 16 + PostGIS 3.5
+
+## Architecture
+
+```
+db/                  Schema and versioned migrations (v0.5.0–v0.7.11)
+model/
+  01_access/         Barrier modeling and fish accessibility
+  02_habitat_linear/ Linear spawning/rearing habitat
+  03_habitat_lateral/ Lateral (riparian) habitat
+  modelled_stream_crossings/
+  gradient_barriers/
+  falls/
+  discharge/
+jobs/                Executable scripts — data loading, ranking, releases
+parameters/          CSV-driven habitat thresholds and watershed configs
+data/                Static lookups, exclusions, user-supplied overrides
+app/                 QGIS styles and mapping configs
+docs/                Sphinx documentation (myst_parser, RTD theme)
+test/                build_db.sh (bootstrap) + test.sh (model validation)
+docker/              Runner container (GDAL + PostGIS client + Python)
+```
+
+## Modeling Pipeline
+
+1. Load/validate stream crossings and source data
+2. Model natural and anthropogenic barriers
+3. Calculate fish accessibility per species
+4. Estimate spawning/rearing habitat
+5. Generate outputs, summaries, and rankings
+
+## Key Patterns
+
+- **SQL-first:** Core logic lives in SQL; Bash scripts orchestrate execution order
+- **CSV-driven config:** Habitat methods, thresholds, and watershed selections via CSV parameters
+- **Versioned migrations:** Schema changes in `db/v*` folders with `migrate.sh` scripts
+- **Species codes:** `ch` (chinook), `cm` (chum), `co` (coho), `pk` (pink), `sk` (sockeye), `st` (steelhead), `wct` (westslope cutthroat), `bt` (bull trout), `ct_dv_rb` (cutthroat/dolly varden/rainbow)
+- **FWA integration:** Freshwater Atlas via `fwapg` — spatial queries use `FWA_Upstream`, ltree hierarchies
+- **Docker dev environment:** `docker compose up -d` exposes PostgreSQL on port 8000
+
+## fwapg — Freshwater Atlas Foundation
+
+[fwapg](https://github.com/smnorris/fwapg) provides the spatial stream network that bcfishpass builds on. It loads BC's Freshwater Atlas into PostgreSQL/PostGIS and adds functions for upstream/downstream analysis.
+
+**Key tables** (in `whse_basemapping`):
+- `fwa_stream_networks_sp` — stream segments with linear references
+- `fwa_streams` — enhanced streams with gradient, channel width, discharge, precipitation
+- `fwa_lakes_poly`, `fwa_rivers_poly`, `fwa_wetlands_poly`, `fwa_watersheds_poly`
+
+**Key functions** (in `postgisftw`):
+- `FWA_Upstream(blk_a, meas_a, wsc_a, lc_a, blk_b, meas_b, wsc_b, lc_b)` — test if B is upstream of A
+- `FWA_Downstream()` — test if B is downstream of A
+- `FWA_IndexPoint()` — snap X,Y coordinates to nearest FWA stream
+- `FWA_WatershedAtMeasure()` — delineate watershed polygon upstream of a point
+
+**Linear referencing model:** Every feature in bcfishpass stores `blue_line_key` + `downstream_route_measure` + `wscode_ltree` + `localcode_ltree`. Upstream/downstream relationships are computed via fwapg functions during model runs and cached in bcfishpass tables.
+
+**Coordinate system:** BC Albers (EPSG:3005). All fwapg functions expect this projection.
+
+### Production database (db_newgraph)
+
+The [db_newgraph](https://github.com/NewGraphEnvironment/db_newgraph) repo maintains the production PostgreSQL instance on Digital Ocean that hosts fwapg + bcfishpass + bcfishobs + BC government base layers. GitHub Actions workflows in db_newgraph handle weekly/monthly data refreshes and model rebuilds.
+
+**Access from Claude Code:** Use the `/db-newgraph` skill (MCP via `@neverinfamous/postgres-mcp`). Requires an active SSH tunnel forwarding port 63333 before starting Claude Code.
+
+```
+DB name:    bcfishpass
+Tunnel:     localhost:63333
+User:       newgraph
+Auth:       Trust via SSH tunnel (no password)
+```
+
+**Access from R:**
+```r
+conn <- fpr::fpr_db_conn()  # reads PG_*_SHARE from ~/.Renviron
+```
+
+## Other Dependencies
+
+- [bcdata](https://github.com/smnorris/bcdata) — BC provincial data access
+- GDAL 3.10.3, GNU parallel, jq
+
+## Environment Variables
+
+```
+DATABASE_URL          PostgreSQL connection string
+AWS_*                 S3 credentials for data distribution
+SSH_USER/KEY/HOST     Remote database access (CI/CD)
+```
+
+## Local Development
+
+```bash
+docker compose build && docker compose up -d
+docker compose run --rm runner test/build_db.sh   # bootstrap test DB
+docker compose run --rm runner test/test.sh        # run model tests
+psql postgresql://postgres@localhost:8000/bcfishpass_test
+```
+
+<\!-- BEGIN SOUL CONVENTIONS — DO NOT EDIT BELOW THIS LINE -->
+
+
+# Cartography
+
+## Style Registry
+
+Use the `gq` package for all shared layer symbology. Never hardcode hex color values when a registry style exists.
+
+```r
+library(gq)
+reg <- gq_reg_main()  # load once per script — 51+ layers
+```
+
+**Core pattern:** `reg$layers$lake`, `reg$layers$road`, `reg$layers$bec_zone`, etc.
+
+### Translators
+
+| Target | Simple layer | Classified layer |
+|--------|-------------|-----------------|
+| tmap | `gq_tmap_style(layer)` → `do.call(tm_polygons, ...)` | `gq_tmap_classes(layer)` → field, values, labels |
+| mapgl | `gq_mapgl_style(layer)` → paint properties | `gq_mapgl_classes(layer)` → match expression |
+
+### Custom styles
+
+For project-specific layers not in the main registry, use a hand-curated CSV and merge:
+
+```r
+reg <- gq_reg_merge(gq_reg_main(), gq_reg_read_csv("path/to/custom.csv"))
+```
+
+Install: `pak::pak("NewGraphEnvironment/gq")`
+
+## Map Targets
+
+| Output | Tool | When |
+|--------|------|------|
+| PDF / print figures | `tmap` v4 | Bookdown PDF, static reports |
+| Interactive HTML | `mapgl` (MapLibre GL) | Bookdown gitbook, memos, web pages |
+| QGIS project | Native QML | Field work, Mergin Maps |
+
+## Key Rules
+
+- **`sf_use_s2(FALSE)`** at top of every mapping script
+- **Compute area BEFORE simplify** in SQL
+- **No map title** — title belongs in the report caption
+- **Legend over least-important terrain** — swap legend and logo sides when it reduces AOI occlusion. No fixed convention for which side.
+- **Four-corner rule** — legend, logo, scale bar, keymap each get their own corner. Never stack two in the same quadrant.
+- **Bbox must match canvas aspect ratio** — compute the ratio from geographic extents and page dimensions. Mismatch causes white space bands.
+- **Consistent element-to-frame spacing** — all inset elements should have visually equal margins from the frame edge
+- **Map fills to frame** — basemap extends edge-to-edge, no dead bands. Use near-zero `inner.margins` and `outer.margins`.
+- **Suppress auto-legends** — build manual ones from registry values
+- **ALL CAPS labels appear larger** — use title case for legend labels (gq `gq_tmap_classes()` handles this automatically via `to_title()` fallback)
+
+## Self-Review (after every render)
+
+Read the PNG and check before showing anyone:
+
+1. Correct polygon/study area shown? (verify source data, not just the bbox)
+2. Map fills the page? (no white/black bands)
+3. Keymap inside frame with spacing from edge?
+4. No element overlap? (each in its own corner)
+5. Legend over least-important terrain?
+6. Consistent spacing across all elements?
+7. Scale bar breaks appropriate for extent?
+
+See the `cartography` skill for full reference: basemap blending, BC spatial data queries, label hierarchy, mapgl gotchas, and worked examples.
+
+## Land Cover Change
+
+Use [drift](https://github.com/NewGraphEnvironment/drift) and [flooded](https://github.com/NewGraphEnvironment/flooded) together for riparian land cover change analysis. flooded delineates floodplain extents from DEMs and stream networks; drift tracks what's changing inside them over time.
+
+**Pipeline:**
+
+```r
+# 1. Delineate floodplain AOI (flooded)
+valleys <- flooded::fl_valley_confine(dem, streams)
+
+# 2. Fetch, classify, summarize (drift)
+rasters   <- drift::dft_stac_fetch(aoi, source = "io-lulc", years = c(2017, 2020, 2023))
+classified <- drift::dft_rast_classify(rasters, source = "io-lulc")
+summary    <- drift::dft_rast_summarize(classified, unit = "ha")
+
+# 3. Interactive map with layer toggle
+drift::dft_map_interactive(classified, aoi = aoi)
+```
+
+- Class colors come from drift's shipped class tables (IO LULC, ESA WorldCover)
+- For production COGs on S3, `dft_map_interactive()` serves tiles via titiler — set `options(drift.titiler_url = "...")`
+- See the [drift vignette](https://www.newgraphenvironment.com/drift/articles/neexdzii-kwa.html) for a worked example (Neexdzii Kwa floodplain, 2017-2023)
+
+
+# Code Check Conventions
+
+Structured checklist for reviewing diffs before commit. Used by `/code-check`.
+Add new checks here when a bug class is discovered — they compound over time.
+
+## Shell Scripts
+
+### Quoting
+- Variables in double-quoted strings containing single quotes break if value has `'`
+- `"echo '${VAR}'"` — if VAR contains `'`, shell syntax breaks
+- Use `printf '%s\n' "$VAR" | command` to pipe values safely
+- Heredocs: unquoted `<<EOF` expands variables locally, `<<'EOF'` does not — know which you need
+
+### Paths
+- Hardcoded absolute paths (`/Users/airvine/...`) break for other users
+- Use `REPO_ROOT="$(cd "$(dirname "$0")/<relative>" && pwd)"`
+- After moving scripts, verify `../` depth still resolves correctly
+- Usage comments should match actual script location
+
+### Silent Failures
+- `|| true` hides real errors — is the failure actually safe to ignore?
+- Empty variable before destructive operation (rm, destroy) — add guard: `[ -n "$VAR" ] || exit 1`
+- `grep` returning empty silently — downstream commands get empty input
+
+### Process Visibility
+- Secrets passed as command-line args are visible in `ps aux`
+- Use env files, stdin pipes, or temp files with `chmod 600` instead
+
+## Cloud-Init (YAML)
+
+### ASCII
+- Must be pure ASCII — em dashes, curly quotes, arrows cause silent parse failure
+- Check with: `perl -ne 'print "$.: $_" if /[^\x00-\x7F]/' file.yaml`
+
+### State
+- `cloud-init clean` causes full re-provisioning on next boot — almost never what you want before snapshot
+- Use `tailscale logout` not `tailscale down` before snapshot (deregister vs disconnect)
+
+### Template Variables
+- Secrets rendered via `templatefile()` are readable at `169.254.169.254` metadata endpoint
+- Acceptable for ephemeral machines, document the tradeoff
+
+## OpenTofu / Terraform
+
+### State
+- Parsing `tofu state show` text output is fragile — use `tofu output` instead
+- Missing outputs that scripts need — add them to main.tf
+- Snapshot/image IDs in tfvars after deleting the snapshot — stale reference
+
+### Destructive Operations
+- Validate resource IDs before destroy: `[ -n "$ID" ] || exit 1`
+- `tofu destroy` without `-target` destroys everything including reserved IPs
+- Snapshot ID extraction: use `--resource droplet` and `grep -F` for exact match
+
+## Security
+
+### Secrets in Committed Files
+- `.tfvars` must be gitignored (contains tokens, passwords)
+- `.tfvars.example` should have all variables with empty/placeholder values
+- Sensitive variables need `sensitive = true` in variables.tf
+
+### Firewall Defaults
+- `0.0.0.0/0` for SSH is world-open — document if intentional
+- If access is gated by Tailscale, say so explicitly
+
+### Credentials
+- Passwords with special chars (`'`, `"`, `$`, `!`) break naive shell quoting
+- `printf '%q'` escapes values for shell safety
+- Temp files for secrets: create with `chmod 600`, delete after use
+
+## R / Package Installation
+
+### pak Behavior
+- pak stops on first unresolvable package — all subsequent packages are skipped
+- Removed CRAN packages (like `leaflet.extras`) must move to GitHub source
+- PPPM binaries may lag a few hours behind new CRAN releases
+
+### Reproducibility
+- Branch pins (`pkg@branch`) are not reproducible — document why used
+- Pinned download URLs (RStudio .deb) go stale — document where to update
+
+## General
+
+### Documentation Staleness
+- Moving/renaming scripts: update CLAUDE.md, READMEs, usage comments
+- New variables: update .tfvars.example
+- New workflows: update relevant README
+
+
+# Communications Conventions
+
+Standards for external communications across New Graph Environment.
+
+[compost](https://github.com/NewGraphEnvironment/compost) is the working repo for email drafts, scripts, contact management, and Gmail utilities. These conventions capture the universal principles; compost has the implementation details.
+
+## Tone
+
+Three levels. Default to casual unless context dictates otherwise.
+
+| Level | When | Style |
+|-------|------|-------|
+| **Casual** | Established working relationships | Professional but warm. Direct, concise. No slang. |
+| **Very casual** | Close collaborators with rapport | Colloquial OK. Light humor. Slang acceptable. |
+| **Formal** | New contacts, senior officials, formal requests | Full sentences, no contractions, state purpose early. |
+
+**Collaborative, not directive.** Acknowledge their constraints:
+
+- **Avoid:** "Work these in as makes sense for your lab"
+- **Better:** "If you're able to work these in when it fits your schedule that would be really helpful"
+
+## Email Workflow
+
+Draft in markdown, convert to HTML at send time via gmailr. See compost for script templates, OAuth setup, and `search_gmail.R`.
+
+**File naming:** `YYYYMMDD_recipient_topic_draft.md` + `YYYYMMDD_recipient_topic.R`
+
+**Key gotchas** (documented in detail in compost):
+- Gmail strips `<style>` blocks — use inline styles for tables
+- `gm_create_draft()` does NOT support `thread_id` — only `gm_send_message()` can reply into threads. Drafts land outside the conversation.
+- Always use `test_mode` and `create_draft` variables for safe workflows
+
+## Data in Emails
+
+- **Never manually type data into tables** — generate programmatically from source files
+- **Link to canonical sources** (GitHub repos, public reports) rather than embedding raw data
+- **Provide both CSV and Excel** when sharing tabular data
+- **Document ID codes** — when using compressed IDs (e.g., `id_lab`), include a reference sheet so recipients can decode
+
+## What Not to Expose Externally
+
+- Internal QA info (blanks, control samples, calibration data)
+- Internal tracking codes or SRED references
+- Draft status or revision history
+- Internal project management details
+
+Keep client-facing communications focused on deliverables and technical content.
+
+## Signature
+
+```
+Al Irvine B.Sc., R.P.Bio.
+New Graph Environment Ltd.
+
+Cell: 250-777-1518
+Email: al@newgraphenvironment.com
+Website: www.newgraphenvironment.com
+```
+
+In HTML emails, use `<br>` tags between lines.
+
+
+# LLM Behavioral Guidelines
+
+<!-- Source: https://github.com/forrestchang/andrej-karpathy-skills/main/CLAUDE.md -->
+<!-- Last synced: 2026-02-06 -->
+<!-- These principles are hardcoded locally. We do not curl at deploy time. -->
+<!-- Periodically check the source for meaningful updates. -->
+
+Behavioral guidelines to reduce common LLM coding mistakes. Merge with project-specific instructions as needed.
+
+**Tradeoff:** These guidelines bias toward caution over speed. For trivial tasks, use judgment.
+
+## 1. Think Before Coding
+
+**Don't assume. Don't hide confusion. Surface tradeoffs.**
+
+Before implementing:
+- State your assumptions explicitly. If uncertain, ask.
+- If multiple interpretations exist, present them - don't pick silently.
+- If a simpler approach exists, say so. Push back when warranted.
+- If something is unclear, stop. Name what's confusing. Ask.
+
+## 2. Simplicity First
+
+**Minimum code that solves the problem. Nothing speculative.**
+
+- No features beyond what was asked.
+- No abstractions for single-use code.
+- No "flexibility" or "configurability" that wasn't requested.
+- No error handling for impossible scenarios.
+- If you write 200 lines and it could be 50, rewrite it.
+
+Ask yourself: "Would a senior engineer say this is overcomplicated?" If yes, simplify.
+
+## 3. Surgical Changes
+
+**Touch only what you must. Clean up only your own mess.**
+
+When editing existing code:
+- Don't "improve" adjacent code, comments, or formatting.
+- Don't refactor things that aren't broken.
+- Match existing style, even if you'd do it differently.
+- If you notice unrelated dead code, mention it - don't delete it.
+
+When your changes create orphans:
+- Remove imports/variables/functions that YOUR changes made unused.
+- Don't remove pre-existing dead code unless asked.
+
+The test: Every changed line should trace directly to the user's request.
+
+## 4. Goal-Driven Execution
+
+**Define success criteria. Loop until verified.**
+
+Transform tasks into verifiable goals:
+- "Add validation" → "Write tests for invalid inputs, then make them pass"
+- "Fix the bug" → "Write a test that reproduces it, then make it pass"
+- "Refactor X" → "Ensure tests pass before and after"
+
+For multi-step tasks, state a brief plan:
+```
+1. [Step] → verify: [check]
+2. [Step] → verify: [check]
+3. [Step] → verify: [check]
+```
+
+Strong success criteria let you loop independently. Weak criteria ("make it work") require constant clarification.
+
+
+**These guidelines are working if:** fewer unnecessary changes in diffs, fewer rewrites due to overcomplication, and clarifying questions come before implementation rather than after mistakes.
+
+
+# New Graph Environment Conventions
+
+Core patterns for professional, efficient workflows across New Graph Environment repositories.
+
+## Ecosystem Overview
+
+Five repos form the governance and operations layer across all New Graph Environment work:
+
+| Repo | Purpose | Analogy |
+|------|---------|---------|
+| [compass](https://github.com/NewGraphEnvironment/compass) | Ethics, values, guiding principles | The "why" |
+| [soul](https://github.com/NewGraphEnvironment/soul) | Standards, skills, conventions for LLM agents | The "how" |
+| [compost](https://github.com/NewGraphEnvironment/compost) | Communications templates, email workflows, contact management | The "who" |
+| [rtj](https://github.com/NewGraphEnvironment/rtj) (formerly awshak) | Infrastructure as Code, deployment | The "where" |
+| [gq](https://github.com/NewGraphEnvironment/gq) | Cartographic style management across QGIS, tmap, leaflet, web | The "look" |
+
+**Adaptive management:** Conventions evolve from real project work, not theory. When a pattern is learned or refined during project work, propagate it back to soul so all projects benefit. The `/claude-md-init` skill builds each project's `CLAUDE.md` from soul conventions.
+
+**Cross-references:** [sred-2025-2026](https://github.com/NewGraphEnvironment/sred-2025-2026) tracks R&D activities across repos. Compost cross-cuts all projects as the centralized communications workflow — email drafts, contact registry, and tone guidelines live there and are copied to individual project `communications/` folders as needed.
+
+## Issue Workflow
+
+### Before Creating an Issue (non-negotiable)
+
+1. **Check for duplicates:** `gh issue list --state open --search "<keywords>"` -- search before creating
+2. **Link to SRED:** If work involves infrastructure, R&D, tooling, or performance benchmarking, add `Relates to NewGraphEnvironment/sred-2025-2026#N` (match by repo name in SRED issue title)
+3. **One issue, one concern.** Keep focused.
+
+### Professional Issue Writing
+
+Write issues with clear technical focus:
+
+- **Use normal technical language** in titles and descriptions
+- **Focus on the problem and solution** approach
+- **Add tracking links at the end** (e.g., `Relates to Owner/repo#N`)
+
+**Issue body structure:**
+```markdown
+## Problem
+<what's wrong or missing>
+
+## Proposed Solution
+<approach>
+
+Relates to #<local>
+Relates to NewGraphEnvironment/sred-2025-2026#<N>
+```
+
+### GitHub Issue Creation - Always Use Files
+
+The `gh issue create` command with heredoc syntax fails repeatedly with EOF errors. ALWAYS use `--body-file`:
+
+```bash
+cat > /tmp/issue_body.md << 'EOF'
+## Problem
+...
+
+## Proposed Solution
+...
+EOF
+
+gh issue create --title "Brief technical title" --body-file /tmp/issue_body.md
+```
+
+## Closing Issues
+
+**DO:** Close issues via commit messages. The commit IS the closure and the documentation.
+
+```
+Fix broken DEM path in loading pipeline
+
+Update hardcoded path to use config-driven resolution.
+
+Fixes #20
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+```
+
+**DON'T:** Close issues with `gh issue close`. This breaks the audit trail — there's no linked diff showing what changed.
+
+- `Fixes #N` or `Closes #N` — auto-closes and links the commit to the issue
+- `Relates to #N` — partial progress, does not close
+- Always close issues when work is complete. Don't leave stale open issues.
+
+## Commit Quality
+
+Write clear, informative commit messages:
+
+```
+Brief description (50 chars or less)
+
+Detailed explanation of changes and impact.
+
+Fixes #<issue> (or Relates to #<issue>)
+Relates to NewGraphEnvironment/sred-2025-2026#<N>
+
+Co-Authored-By: Claude Opus 4.6 <noreply@anthropic.com>
+```
+
+**When to commit:**
+- Logical, atomic units of work
+- Working state (tests pass)
+- Clear description of changes
+
+**What to avoid:**
+- "WIP" or "temp" commits in main branch
+- Combining unrelated changes
+- Vague messages like "fixes" or "updates"
+
+## LLM Agent Conventions
+
+Rules learned from real project sessions. These apply across all repos.
+
+- **Install missing packages, don't workaround** — if a package is needed, ask the user to install it (e.g. `pak::pak("pkg")`). Don't write degraded fallback code to avoid the dependency.
+- **Never hardcode extractable data** — if coordinates, station names, or metadata can be pulled from an API or database at runtime, do that. Don't hardcode values that have a programmatic source.
+- **Close issues via commits, not `gh issue close`** — see Closing Issues above.
+- **Cite primary sources** — see references conventions.
+
+## Naming Conventions
+
+**Pattern: `noun_verb-detail`** -- noun first, verb second across all naming:
+
+| What | Example |
+|------|---------|
+| Skills | `claude-md-init`, `gh-issue-create`, `planning-update` |
+| Scripts | `stac_register-baseline.sh`, `stac_register-pypgstac.sh` |
+| Logs | `20260209_stac_register-baseline_stac-dem-bc.txt` |
+| Log format | `yyyymmdd_noun_verb-detail_target.ext` |
+
+Scripts and logs live together: `scripts/<module>/logs/`
+
+## Projects vs Milestones
+
+- **Projects** = daily cross-repo tracking (always add to relevant project)
+- **Milestones** = iteration boundaries (only for release/claim prep)
+- Don't double-track unless there's a reason
+
+| Content | Project |
+|---------|---------|
+| R&D, experiments, SRED-related | **SRED R&D Tracking (#8)** |
+| Data storage, sqlite, postgres, pipelines | **Data Architecture (#9)** |
+| Fish passage field/reporting | **Fish Passage 2025 (#6)** |
+| Restoration planning | **Aquatic Restoration Planning (#5)** |
+| QGIS, Mergin, field forms | **Collaborative GIS (#3)** |
+
+
+# Planning Conventions
+
+How Claude manages structured planning for complex tasks using planning-with-files (PWF).
+
+## When to Plan
+
+Use PWF when a task has multiple phases, requires research, or involves more than ~5 tool calls. Triggers:
+- User says "let's plan this", "plan mode", "use planning", or invokes `/planning-init`
+- Complex issue work begins (multi-step, uncertain approach)
+- Claude judges the task warrants structured tracking
+
+Skip planning for single-file edits, quick fixes, or tasks with obvious next steps.
+
+## The Workflow
+
+1. **Explore first** — Enter plan mode (read-only). Read code, trace paths, understand the problem before proposing anything.
+2. **Plan to files** — Write the plan into 3 files in `planning/active/`:
+   - `task_plan.md` — Phases with checkbox tasks
+   - `findings.md` — Research, discoveries, technical analysis
+   - `progress.md` — Session log with timestamps and commit refs
+3. **Commit the plan** — Commit the planning files before starting implementation. This is the baseline.
+4. **Work in atomic commits** — Each commit bundles code changes WITH checkbox updates in the planning files. The diff shows both what was done and the checkbox marking it done.
+5. **Code check before commit** — Run `/code-check` on staged diffs before committing. Don't mark a task done until the diff passes review.
+6. **Archive when complete** — Move `planning/active/` to `planning/archive/` via `/planning-archive`. Write a README.md in the archive directory with a one-paragraph outcome summary and closing commit/PR ref — future sessions scan these to catch up fast.
+
+## Atomic Commits (Critical)
+
+Every commit that completes a planned task MUST include:
+- The code/script changes
+- The checkbox update in `task_plan.md` (`- [ ]` -> `- [x]`)
+- A progress entry in `progress.md` if meaningful
+
+This creates a git audit trail where `git log -- planning/` tells the full story. Each commit is self-documenting — you can backtrack with git and understand everything that happened.
+
+## File Formats
+
+### task_plan.md
+
+Phases with checkboxes. This is the core tracking file.
+
+```markdown
+# Task Plan
+
+## Phase 1: [Name]
+- [ ] Task description
+- [ ] Another task
+
+## Phase 2: [Name]
+- [ ] Task description
+```
+
+Mark tasks done as they're completed: `- [x] Task description`
+
+### findings.md
+
+Append-only research log. Discoveries, technical analysis, things learned.
+
+```markdown
+# Findings
+
+## [Topic]
+[What was found, with source/date]
+```
+
+### progress.md
+
+Session entries with commit references.
+
+```markdown
+# Progress
+
+## Session YYYY-MM-DD
+- Completed: [items]
+- Commits: [refs]
+- Next: [items]
+```
+
+## Directory Structure
+
+```
+planning/
+  active/          <- Current work (3 PWF files)
+  archive/         <- Completed issues
+    YYYY-MM-issue-N-slug/
+```
+
+If `planning/` doesn't exist in the repo, run `/planning-init` first.
+
+## Skills
+
+| Skill | When to use |
+|-------|-------------|
+| `/planning-init` | First time in a repo — creates directory structure |
+| `/planning-update` | Mid-session — sync checkboxes and progress |
+| `/planning-archive` | Issue complete — archive and create fresh active/ |
+
+
+# SRED Conventions
+
+How SR&ED tracking integrates with New Graph Environment's development workflows.
+
+## The Claim: One Project
+
+All SRED-eligible work across NGE falls under a **single continuous project**:
+
+> **Dynamic GIS-based Data Processing and Reporting Framework**
+
+- **Field:** Software Engineering (2.02.09)
+- **Start date:** May 2022
+- **Fiscal year:** May 1 – April 30
+- **Consultant:** Boast Capital (prepares final technical report)
+
+**Do not fragment work into separate claims.** Each fiscal year's work is structured as iterations within this one project. Internal tracking (experiment numbers in `sred-2025-2026`) maps to iterations — Boast assembles the final narrative.
+
+## Tagging Work for SRED
+
+### Commits
+
+Use `Relates to NewGraphEnvironment/sred-2025-2026#N` in commit messages when work is SRED-eligible.
+
+### Time entries (rolex)
+
+Tag hours with `sred_ref` field linking to the relevant `sred-2025-2026` issue number.
+
+### GitHub issues
+
+Link SRED-eligible issues to the tracking repo: `Relates to NewGraphEnvironment/sred-2025-2026#N`
+
+## What Qualifies as SRED
+
+**Eligible (systematic investigation to overcome technological uncertainty):**
+- Building tools/functions that don't exist in standard practice
+- Prototyping new integrations between systems (GIS ↔ reporting ↔ field collection)
+- Testing whether an approach works and documenting why it did/didn't
+- Iterating on failed approaches with new hypotheses
+
+**Not eligible:**
+- Standard configuration of known tools
+- Routine bug fixes in working systems
+- Writing reports using the framework (that's service delivery)
+
+**The test:** "Did we try something we weren't sure would work, and did we learn something from the attempt?" If yes, it's likely eligible.

@@ -14,23 +14,25 @@
 # import sys
 # sys.path.insert(0, os.path.abspath('.'))
 
+import datetime
+import os
 
 # -- Project information -----------------------------------------------------
-
+year = datetime.date.today().year
 project = 'bcfishpass'
-copyright = '2021, Simon Norris'
-author = 'Simon Norris'
+copyright = f'{year}, bcfishpass contributors'
+author = 'Simon Norris, bcfishpass contributors'
 
 # The full version, including alpha/beta/rc tags
-release = 'v3.0.0a'
-
-
+release = os.environ.get("VERSION", "unknown")
+version = release
 # -- General configuration ---------------------------------------------------
 
 # Add any Sphinx extension module names here, as strings. They can be
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = ['myst_parser']
+suppress_warnings = ['ref.myst']
 
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
@@ -52,3 +54,9 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+# These paths are either relative to html_static_path
+# or fully qualified paths (eg. https://...)
+html_css_files = [
+    'css/custom.css',
+]
