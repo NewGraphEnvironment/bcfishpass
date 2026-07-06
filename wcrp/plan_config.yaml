@@ -72,7 +72,7 @@
 - plan_name: Thompson-Shuswap - Bonaparte
   plan_code: tho_shu_bonp
   plan_schema: tho_shu
-  target_species: [CH, CO, SK, ST]
+  target_species: [CH, CO, ST]
   connectivity_status_types: [spawningrearing_all]
   filter_clause: >-
     watershed_group_code = 'BONP'
@@ -176,7 +176,7 @@
     - spawning_st
     - rearing_st
   filter_clause: >-
-    watershed_group_code in ('TAKL', 'MIDR', 'DRIR', 'MSKE', 'SUST', 'USKE') OR
+    watershed_group_code in ('TAKL', 'MIDR', 'DRIR', 'SUST', 'USKE') OR
     FWA_Upstream(
       360887278, 
       464069.527166015,
@@ -208,3 +208,11 @@
       localcode_ltree
     ) OR 
     blue_line_key = 360781053
+
+- plan_name: Ulkatcho
+  plan_code: ulkatcho
+  plan_schema: ulkatcho
+  target_species: [CH, CO, SK, ST]
+  connectivity_status_types: [spawning_all, rearing_all, spawningrearing_all]
+  filter_clause: >-
+    watershed_group_code in ('LDEN', 'UDEN')
