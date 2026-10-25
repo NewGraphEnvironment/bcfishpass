@@ -31,14 +31,14 @@ Decided by the user at plan approval, 2026-10-25.
 - Out of scope, staying on #15: the latent passability-updates point (the CABD insert reads raw `cabd`, not `dams_vw`), and placeholders lacking `dam_use` so not reaching `barriers_dams_hydro`.
 
 ## Phase 1: Setup and baseline capture
-- [ ] `gh repo set-default`, ff local `main`, create the worktree + branch, scaffold `planning/` + PWF, commit baseline, push branch to origin
-- [ ] Confirm the tunnel (`localhost:63333`) and connect to **`bcfishpass_dev`** only
-- [ ] Read-only baseline for KETL/LARL/SKGT: counts by `crossing_source`, the full `aggregated_crossings_id` list (saved to scratchpad), `barriers_dams`-selection count, misc 3/4/5 rows, and the reprex query. Record in `findings.md`
+- [x] `gh repo set-default`, ff local `main`, create the worktree + branch, scaffold `planning/` + PWF, commit baseline, push branch to origin
+- [x] Confirm the tunnel (`localhost:63333`) and connect to **`bcfishpass_dev`** only
+- [x] Read-only baseline for KETL/LARL/SKGT: counts by `crossing_source`, the full `aggregated_crossings_id` list (saved to scratchpad), `barriers_dams`-selection count, misc 3/4/5 rows, and the reprex query. Record in `findings.md`
 
 ## Phase 2: `load_dams.sql`: id range, stable order, status
-- [ ] `usa` CTE: `row_number() over (order by a.blue_line_key, a.downstream_route_measure) + 1100000000`, carry `a.barrier_ind`
-- [ ] Final select: `case when barrier_ind then 1 when not barrier_ind then 3 end as passability_status_code` in place of `null`
-- [ ] Update the CTE comment to name the id range
+- [x] `usa` CTE: `row_number() over (order by a.blue_line_key, a.downstream_route_measure) + 1100000000`, carry `a.barrier_ind`
+- [x] Final select: `case when barrier_ind then 1 when not barrier_ind then 3 end as passability_status_code` in place of `null`
+- [x] Update the CTE comment to name the id range
 
 ## Phase 3: `load_crossings.sql`: placeholder branch
 - [ ] New insert after the CABD dams insert (after line 437), with the same column list as the CABD insert. Source is `dams_vw d` + stream join + `left join cabd.dams cabd on d.dam_id = cabd.cabd_id::text where cabd.cabd_id is null`, status from `d.passability_status_code` using the same case mapping, `'MISC BARRIERS'`, `OTHER`/`DAM`, dam attributes from `d`, `on conflict do nothing`

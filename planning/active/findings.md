@@ -141,3 +141,58 @@ Never run this against production: `truncate bcfishpass.dams` takes an exclusive
 **Link side:** once merged, flip the link `bcfishpass` bundle (NewGraphEnvironment/link#244, NewGraphEnvironment/link#367).
 
 
+
+## Phase 1 baseline: bcfishpass_dev (2026-10-25)
+
+Model run 63, `v0.7.15-68-g6c8fd845`, db_version `202609281615`. Read-only session (`default_transaction_read_only=on`). KETL/LARL/SKGT hold 22,323 crossings; total crossings 525,538, dams 2,557.
+
+```
+== counts by source, KETL/LARL/SKGT
+ wsg  |   crossing_source   | count 
+------+---------------------+-------
+ KETL | CABD                |    48
+ KETL | MODELLED CROSSINGS  | 12075
+ KETL | PSCIS               |   743
+ KETL | USER_CROSSINGS_MISC |     1
+ LARL | CABD                |    20
+ LARL | MODELLED CROSSINGS  |  8326
+ LARL | PSCIS               |   414
+ SKGT | CABD                |     1
+ SKGT | MODELLED CROSSINGS  |   695
+(9 rows)
+
+== barriers_dams selection, KETL/LARL/SKGT
+ wsg  | count 
+------+-------
+ KETL |    47
+ LARL |    20
+ SKGT |     1
+(3 rows)
+
+== misc 3/4/5
+ aggregated_crossings_id | user_crossing_misc_id |   crossing_source   | barrier_status | watershed_group_code 
+-------------------------+-----------------------+---------------------+----------------+----------------------
+ 1200000003              |                     3 | USER_CROSSINGS_MISC | BARRIER        | QUES
+ 1200000004              |                     4 | USER_CROSSINGS_MISC | BARRIER        | QUES
+ 1200000005              |                     5 | USER_CROSSINGS_MISC | BARRIER        | BOWR
+(3 rows)
+
+== reprex
+   dam_id   |   dam_name_en    | wsg  | passability_status_code | blue_line_key | downstream_route_measure | crossing_with_this_id 
+------------+------------------+------+-------------------------+---------------+--------------------------+-----------------------
+ 1200000001 | Grand Coulee Dam | KETL |                         |     356570045 |                    53510 | 
+ 1200000002 | Grand Coulee Dam | LARL |                         |     356570372 |                  1175649 | 
+ 1200000003 | Grand Coulee Dam | LARL |                         |     356566717 |                      303 | USER_CROSSINGS_MISC
+ 1200000004 | Grand Coulee Dam | LARL |                         |     356546366 |                    10971 | USER_CROSSINGS_MISC
+ 1200000005 | Ross Dam         | SKGT |                         |     356570000 |                   196792 | USER_CROSSINGS_MISC
+(5 rows)
+
+== crossings total, dams total
+ crossings | dams 
+-----------+------
+    525538 | 2557
+(1 row)
+
+```
+
+Phase 4 also runs a control: the unchanged `upstream/main` SQL through the same rollback harness, so any drift between dev's stored crossings and a fresh reload is separated from the effect of the fix.
