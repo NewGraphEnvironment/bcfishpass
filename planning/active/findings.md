@@ -196,3 +196,42 @@ Model run 63, `v0.7.15-68-g6c8fd845`, db_version `202609281615`. Read-only sessi
 ```
 
 Phase 4 also runs a control: the unchanged `upstream/main` SQL through the same rollback harness, so any drift between dev's stored crossings and a fresh reload is separated from the effect of the fix.
+
+## Phase 4 rollback test: bcfishpass_dev (2026-10-25)
+
+Harness (scratchpad `test15/{control,branch}/run.sql`): one psql session with `ON_ERROR_STOP`, `begin` → `load_dams.sql` (its own `begin`/`commit` stripped) → delete KETL/LARL/SKGT crossings → `load_crossings.sql` for `wsg` = KETL, LARL and SKGT → acceptance queries → `rollback`. `lock_timeout` 15s. The run takes about 20 s. A read afterwards found 0 crossings with an `11000000xx` dam id and 2,557 dams, so dev is unchanged.
+
+**Control** (`upstream/main` `3bd2824c`) reproduces the stored baseline exactly: same counts and the same 22,323 ids (`diff` empty). Dev's stored crossings are therefore a faithful baseline for this SQL.
+
+**Branch** (`d8eaff82`) against baseline:
+
+| wsg | crossing_source | before | after |
+|---|---|---:|---:|
+| KETL | CABD | 48 | 48 |
+| KETL | MISC BARRIERS | 0 | 1 |
+| KETL | MODELLED CROSSINGS | 12075 | 12075 |
+| KETL | PSCIS | 743 | 743 |
+| KETL | USER_CROSSINGS_MISC | 1 | 1 |
+| LARL | CABD | 20 | 20 |
+| LARL | MISC BARRIERS | 0 | 3 |
+| LARL | MODELLED CROSSINGS | 8326 | 8326 |
+| LARL | PSCIS | 414 | 414 |
+| SKGT | CABD | 1 | 1 |
+| SKGT | MISC BARRIERS | 0 | 1 |
+| SKGT | MODELLED CROSSINGS | 695 | 695 |
+
+`barriers_dams` selection (`dam_id is not null`, `BARRIER`/`POTENTIAL`, `blue_line_key = watershed_key`): KETL 47 → 48, LARL 20 → 23, SKGT 1 → 2.
+
+The id set differs from baseline by exactly the five placeholder ids added, `1100000001`–`1100000005`; nothing was lost.
+
+| id | dam | wsg | blue_line_key | measure | barrier_status | feature type |
+|---|---|---|---:|---:|---|---|
+| 1100000001 | Grand Coulee Dam | LARL | 356546366 | 10971 | BARRIER | DAM |
+| 1100000002 | Grand Coulee Dam | LARL | 356566717 | 303 | BARRIER | DAM |
+| 1100000003 | Ross Dam | SKGT | 356570000 | 196792 | BARRIER | DAM |
+| 1100000004 | Grand Coulee Dam | KETL | 356570045 | 53510 | BARRIER | DAM |
+| 1100000005 | Grand Coulee Dam | LARL | 356570372 | 1175649 | BARRIER | DAM |
+
+All five are on the mainstem (`blue_line_key = watershed_key`). Misc crossings 3, 4 and 5 are still present under `1200000003`–`1200000005` (QUES, QUES, BOWR). `dams_vw.passability_status_code` = 1 on all five placeholders.
+
+The new ids follow stream order (blue_line_key, measure), not CSV row order, so the KETL placeholder is now `1100000004`, not `…01`.

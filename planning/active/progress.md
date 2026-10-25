@@ -7,3 +7,8 @@
 - Created branch `15-dam-placeholders-crossings` off main in worktree `~/Projects/repo/bcfishpass-15`
 - Scaffolded PWF baseline from issue #15 with approved phases
 - Next: start Phase 1 (baseline capture on `bcfishpass_dev`)
+- Phase 1: baseline captured on `bcfishpass_dev` (read-only), recorded in findings
+- Phase 2: `load_dams.sql`: id range 1100000000, stream-order numbering, status from `barrier_ind` (`21f9fe70`)
+- Phase 3: `load_crossings.sql`: placeholder insert (`d8eaff82`)
+- Phase 4: rollback test passed on dev; control matches baseline exactly; branch adds exactly the five placeholders as dam barriers; misc 3–5 intact
+- Next: Phase 5 (code-check, submit branch, PR body for approval)

@@ -45,9 +45,9 @@ Decided by the user at plan approval, 2026-10-25.
 - [x] Header comment matching the file's style
 
 ## Phase 4: Rollback test on `bcfishpass_dev`
-- [ ] Script in scratchpad: `begin;` → `load_dams.sql` (own `begin`/`commit` stripped) → `delete from bcfishpass.crossings where watershed_group_code in ('KETL','LARL','SKGT')` → `load_crossings.sql` with `-v wsg=` for each of the three → acceptance queries → `rollback;`. Run as one `psql -1`-style session, never against production
-- [ ] Acceptance: all 5 placeholders in `crossings` with `dam_id` set and `BARRIER`, and picked up by the `barriers_dams.sql` WHERE clause (incl. `blue_line_key = watershed_key`). Misc 3/4/5 still present under `12000000{03,04,05}`. KETL/LARL/SKGT otherwise identical to the baseline (counts by source; id set diff = exactly +5 placeholder ids)
-- [ ] Before/after table in `findings.md` for the PR body
+- [x] Script in scratchpad: `begin;` → `load_dams.sql` (own `begin`/`commit` stripped) → `delete from bcfishpass.crossings where watershed_group_code in ('KETL','LARL','SKGT')` → `load_crossings.sql` with `-v wsg=` for each of the three → acceptance queries → `rollback;`. Run as one `psql -1`-style session, never against production
+- [x] Acceptance: all 5 placeholders in `crossings` with `dam_id` set and `BARRIER`, and picked up by the `barriers_dams.sql` WHERE clause (incl. `blue_line_key = watershed_key`). Misc 3/4/5 still present under `12000000{03,04,05}`. KETL/LARL/SKGT otherwise identical to the baseline (counts by source; id set diff = exactly +5 placeholder ids)
+- [x] Before/after table in `findings.md` for the PR body
 
 ## Phase 5: Submit branch and PR
 - [ ] `/code-check` on the code diff
