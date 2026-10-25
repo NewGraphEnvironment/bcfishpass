@@ -105,10 +105,12 @@ begin;
   -- dams downstream of BC are in CABD - but cannot be linked to FWA (most stream outside of BC is not included)
   -- create placeholders on BC streams by adding records to cabd_additions.csv where affected river/stream exists BC, 
   -- and add those to bcfishpass.dams here
+  -- placeholder ids are row number + 1100000000 (1200000000 is used by user_crossings_misc),
+  -- numbered by stream position rather than scan order
   usa as 
   (
     select
-      (row_number() over() + 1200000000)::text as dam_id, * 
+      (row_number() over(order by blue_line_key, downstream_route_measure) + 1100000000)::text as dam_id, * 
       from (
         select
           s.linear_feature_id,
@@ -119,6 +121,7 @@ begin;
           0 as distance_to_stream,
           s.watershed_group_code,
           a.name as barrier_name,
+          a.barrier_ind,
           st_force2d((st_dump(st_locatealong(s.geom, a.downstream_route_measure))).geom) as geom
         from bcfishpass.cabd_additions a
         inner join whse_basemapping.fwa_stream_networks_sp s
@@ -163,7 +166,10 @@ begin;
     null as owner,
     null as dam_use,
     null as operating_status,
-    null as passability_status_code,
+    case
+      when barrier_ind is true then 1
+      when barrier_ind is false then 3
+    end as passability_status_code,
     geom
   from usa;  
 

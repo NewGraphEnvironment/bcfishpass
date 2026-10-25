@@ -436,6 +436,68 @@ where d.watershed_group_code = :'wsg'
 order by dam_id
 on conflict do nothing;
 
+-- --------------------------------
+-- non-cabd dams (placeholders for USA dams, from cabd_additions)
+-----------------------------------
+insert into bcfishpass.crossings
+(
+    aggregated_crossings_id,
+    dam_id,
+    crossing_source,
+    crossing_type_code,
+    crossing_subtype_code,
+    barrier_status,
+    dam_name,
+    utm_zone,
+    utm_easting,
+    utm_northing,
+    linear_feature_id,
+    blue_line_key,
+    watershed_key,
+    downstream_route_measure,
+    wscode_ltree,
+    localcode_ltree,
+    watershed_group_code,
+    gnis_stream_name,
+    stream_order,
+    stream_magnitude,
+    geom
+)
+select
+    d.dam_id as aggregated_crossings_id,
+    d.dam_id,
+    'CABD' as crossing_source, -- placeholders stand in for CABD dams outside BC
+    'OTHER' AS crossing_type_code, -- to match up with PSCIS crossing_type_code
+    'DAM' AS crossing_subtype_code,
+    -- status is set from cabd_additions.barrier_ind in load_dams.sql
+    case
+      when d.passability_status_code = 1 THEN 'BARRIER'
+      when d.passability_status_code = 3 THEN 'PASSABLE'
+    end AS barrier_status,
+    d.dam_name_en as dam_name,
+    substring(to_char(bcfishpass.utmzone(d.geom),'999999') from 6 for 2)::int as utm_zone,
+    st_x(ST_transform(d.geom, bcfishpass.utmzone(d.geom)))::int as utm_easting,
+    st_y(st_transform(d.geom, bcfishpass.utmzone(d.geom)))::int as utm_northing,
+    d.linear_feature_id,
+    d.blue_line_key,
+    s.watershed_key,
+    d.downstream_route_measure,
+    d.wscode_ltree,
+    d.localcode_ltree,
+    d.watershed_group_code,
+    s.gnis_name as gnis_stream_name,
+    s.stream_order,
+    s.stream_magnitude,
+    (st_dump(st_locatealong(s.geom, d.downstream_route_measure))).geom as geom
+from bcfishpass.dams_vw d
+inner join whse_basemapping.fwa_stream_networks_sp s
+on d.linear_feature_id = s.linear_feature_id
+left outer join cabd.dams cabd on d.dam_id = cabd.cabd_id::text
+where cabd.cabd_id is null
+and d.watershed_group_code = :'wsg'
+order by dam_id
+on conflict do nothing;
+
 
 -- --------------------------------
 -- other misc structures
