@@ -235,3 +235,17 @@ The id set differs from baseline by exactly the five placeholder ids added, `110
 All five are on the mainstem (`blue_line_key = watershed_key`). Misc crossings 3, 4 and 5 are still present under `1200000003`–`1200000005` (QUES, QUES, BOWR). `dams_vw.passability_status_code` = 1 on all five placeholders.
 
 The new ids follow stream order (blue_line_key, measure), not CSV row order, so the KETL placeholder is now `1100000004`, not `…01`.
+
+## Code-check and the `crossing_source` amendment (2026-10-25)
+
+Three rounds came back Clean (`review-round{1,2,3}.md`). Round 2 noted that "stable between runs" overstated the numbering, because a new placeholder renumbers the ones after it; the comment was reworded. Round 3 swept everything that reads the id offset or `crossing_source` and found that `app/style_salmon.json:309` draws dams only where `crossing_source = 'CABD'`. The user switched the placeholder source to `'CABD'`. Nothing joins `'CABD'` crossings back to `cabd.dams` (`dams_not_matched_to_streams` starts from `cabd.dams`, so the placeholders can't appear in it).
+
+Re-test with `'CABD'` (same harness): the id set is the baseline plus `1100000001`–`1100000005` (22,328 ids). Misc 3–5 are intact. Dev was unchanged afterwards.
+
+| wsg | CABD before | CABD after | barriers_dams before | after |
+|---|---:|---:|---:|---:|
+| KETL | 48 | 49 | 47 | 48 |
+| LARL | 20 | 23 | 20 | 23 |
+| SKGT | 1 | 2 | 1 | 2 |
+
+Counts for the other sources are unchanged.

@@ -466,7 +466,7 @@ insert into bcfishpass.crossings
 select
     d.dam_id as aggregated_crossings_id,
     d.dam_id,
-    'MISC BARRIERS' as crossing_source,
+    'CABD' as crossing_source, -- placeholders stand in for CABD dams outside BC
     'OTHER' AS crossing_type_code, -- to match up with PSCIS crossing_type_code
     'DAM' AS crossing_subtype_code,
     -- status is set from cabd_additions.barrier_ind in load_dams.sql

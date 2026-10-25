@@ -27,7 +27,7 @@ Decided by the user at plan approval, 2026-10-25.
 - `planning/` (README, `active/`, `archive/`) is created on the work branch only. It never goes on the submit branch. CLAUDE.md stays on `newgraph`.
 - Placeholder ids become `row_number() over (order by blue_line_key, downstream_route_measure) + 1100000000`. The PR says the range is the maintainer's call.
 - Placeholder status comes from `cabd_additions.barrier_ind` (true → 1, false → 3) into `dams.passability_status_code`. There's no new column and no migration.
-- The new crossings branch uses `crossing_source = 'MISC BARRIERS'` (restores the pre-v0.7.7 value, which is in the documented domain) and `dam_name` from `dams_vw.dam_name_en`. The PR flags `'CABD'` as the alternative.
+- **Amended 2026-10-25 by the user after code-check round 3:** `crossing_source = 'CABD'`, because `app/style_salmon.json:309` draws dams only where `crossing_source = 'CABD'`. Originally: the new crossings branch uses `crossing_source = 'MISC BARRIERS'` (restores the pre-v0.7.7 value, which is in the documented domain) and `dam_name` from `dams_vw.dam_name_en`. The PR flags `'CABD'` as the alternative.
 - Out of scope, staying on #15: the latent passability-updates point (the CABD insert reads raw `cabd`, not `dams_vw`), and placeholders lacking `dam_use` so not reaching `barriers_dams_hydro`.
 
 ## Phase 1: Setup and baseline capture
@@ -41,7 +41,7 @@ Decided by the user at plan approval, 2026-10-25.
 - [x] Update the CTE comment to name the id range
 
 ## Phase 3: `load_crossings.sql`: placeholder branch
-- [x] New insert after the CABD dams insert (after line 437), with the same column list as the CABD insert. Source is `dams_vw d` + stream join + `left join cabd.dams cabd on d.dam_id = cabd.cabd_id::text where cabd.cabd_id is null`, status from `d.passability_status_code` using the same case mapping, `'MISC BARRIERS'`, `OTHER`/`DAM`, dam attributes from `d`, `on conflict do nothing`
+- [x] New insert after the CABD dams insert (after line 437), with the same column list as the CABD insert. Source is `dams_vw d` + stream join + `left join cabd.dams cabd on d.dam_id = cabd.cabd_id::text where cabd.cabd_id is null`, status from `d.passability_status_code` using the same case mapping, `'MISC BARRIERS'` (amended to `'CABD'`, see gate), `OTHER`/`DAM`, dam attributes from `d`, `on conflict do nothing`
 - [x] Header comment matching the file's style
 
 ## Phase 4: Rollback test on `bcfishpass_dev`
@@ -50,7 +50,7 @@ Decided by the user at plan approval, 2026-10-25.
 - [x] Before/after table in `findings.md` for the PR body
 
 ## Phase 5: Submit branch and PR
-- [ ] `/code-check` on the code diff
+- [x] `/code-check` on the code diff (3 rounds, all Clean; round 3 led to the `'CABD'` amendment)
 - [ ] `fix-dam-placeholders-crossings` cut from `upstream/main`, `cherry-pick --no-commit` of the code commits, tree diff vs work branch = only `planning/`
 - [ ] Commit message: no `#N`, no `Claude-Session:`, keeps `Co-Authored-By`, no Assisted-by offer
 - [ ] Push to origin. **Show you the PR body and confirm before** opening the PR to smnorris/bcfishpass (referencing #937, before/after counts, id-range and `crossing_source` as his call)
