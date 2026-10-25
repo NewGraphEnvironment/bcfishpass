@@ -41,8 +41,8 @@ Decided by the user at plan approval, 2026-10-25.
 - [x] Update the CTE comment to name the id range
 
 ## Phase 3: `load_crossings.sql`: placeholder branch
-- [ ] New insert after the CABD dams insert (after line 437), with the same column list as the CABD insert. Source is `dams_vw d` + stream join + `left join cabd.dams cabd on d.dam_id = cabd.cabd_id::text where cabd.cabd_id is null`, status from `d.passability_status_code` using the same case mapping, `'MISC BARRIERS'`, `OTHER`/`DAM`, dam attributes from `d`, `on conflict do nothing`
-- [ ] Header comment matching the file's style
+- [x] New insert after the CABD dams insert (after line 437), with the same column list as the CABD insert. Source is `dams_vw d` + stream join + `left join cabd.dams cabd on d.dam_id = cabd.cabd_id::text where cabd.cabd_id is null`, status from `d.passability_status_code` using the same case mapping, `'MISC BARRIERS'`, `OTHER`/`DAM`, dam attributes from `d`, `on conflict do nothing`
+- [x] Header comment matching the file's style
 
 ## Phase 4: Rollback test on `bcfishpass_dev`
 - [ ] Script in scratchpad: `begin;` → `load_dams.sql` (own `begin`/`commit` stripped) → `delete from bcfishpass.crossings where watershed_group_code in ('KETL','LARL','SKGT')` → `load_crossings.sql` with `-v wsg=` for each of the three → acceptance queries → `rollback;`. Run as one `psql -1`-style session, never against production
