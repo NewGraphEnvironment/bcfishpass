@@ -12,3 +12,5 @@
 - Phase 3: `load_crossings.sql`: placeholder insert (`d8eaff82`)
 - Phase 4: rollback test passed on dev; control matches baseline exactly; branch adds exactly the five placeholders as dam barriers; misc 3–5 intact
 - Next: Phase 5 (code-check, submit branch, PR body for approval)
+- Phase 5: code-check 3 rounds Clean. The user amended `crossing_source` to `'CABD'` after round 3 (web map styling) and the re-test passed (`e4fdf27a`). Submit branch `fix-dam-placeholders-crossings` (`d613ae28`) pushed to origin
+- Next: user approves the PR body, then open the PR to smnorris/bcfishpass and tick fork #15

@@ -51,8 +51,8 @@ Decided by the user at plan approval, 2026-10-25.
 
 ## Phase 5: Submit branch and PR
 - [x] `/code-check` on the code diff (3 rounds, all Clean; round 3 led to the `'CABD'` amendment)
-- [ ] `fix-dam-placeholders-crossings` cut from `upstream/main`, `cherry-pick --no-commit` of the code commits, tree diff vs work branch = only `planning/`
-- [ ] Commit message: no `#N`, no `Claude-Session:`, keeps `Co-Authored-By`, no Assisted-by offer
+- [x] `fix-dam-placeholders-crossings` cut from `upstream/main` (`d613ae28`), with the two SQL files checked out from the work branch instead of cherry-picked, because the work commits also touch `planning/`. The tree diff against the work branch is `planning/` only
+- [x] Commit message: no `#N`, no `Claude-Session:`, keeps `Co-Authored-By`, no Assisted-by offer
 - [ ] Push to origin. **Show you the PR body and confirm before** opening the PR to smnorris/bcfishpass (referencing #937, before/after counts, id-range and `crossing_source` as his call)
 - [ ] Tick the "Next" checkboxes on fork #15 and link the PR
 
