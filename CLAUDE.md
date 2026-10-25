@@ -4,7 +4,7 @@ Aquatic connectivity / fish passage database for British Columbia. Tracks barrie
 
 ## Repository Context
 
-**Repository:** smnorris/bcfishpass
+**Repository:** NewGraphEnvironment/bcfishpass, a fork of smnorris/bcfishpass
 **License:** Apache 2.0
 **Primary Languages:** SQL, Bash, Python
 **Database:** PostgreSQL 16 + PostGIS 3.5
@@ -105,6 +105,14 @@ docker compose run --rm runner test/build_db.sh   # bootstrap test DB
 docker compose run --rm runner test/test.sh        # run model tests
 psql postgresql://postgres@localhost:8000/bcfishpass_test
 ```
+
+## Fork branches
+
+- `main` mirrors upstream `main`, fast-forward only. Nothing of ours is committed there.
+- `newgraph` holds this `CLAUDE.md` and our parameters, and takes `main` by merge.
+- A fix for upstream gets its own branch cut from upstream `main`, with no planning files and no `CLAUDE.md`. Planning for it lives on a separate working branch that stays on the fork.
+
+<!-- conventions-branch: newgraph -->
 
 <!-- BEGIN SOUL CONVENTIONS — DO NOT EDIT BELOW THIS LINE -->
 
