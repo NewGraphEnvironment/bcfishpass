@@ -106,7 +106,7 @@ begin;
   -- create placeholders on BC streams by adding records to cabd_additions.csv where affected river/stream exists BC, 
   -- and add those to bcfishpass.dams here
   -- placeholder ids are row number + 1100000000 (1200000000 is used by user_crossings_misc),
-  -- numbered by stream position so ids are stable between runs
+  -- numbered by stream position rather than scan order
   usa as 
   (
     select
