@@ -14,3 +14,9 @@
 - Next: Phase 5 (code-check, submit branch, PR body for approval)
 - Phase 5: code-check 3 rounds Clean. The user amended `crossing_source` to `'CABD'` after round 3 (web map styling) and the re-test passed (`e4fdf27a`). Submit branch `fix-dam-placeholders-crossings` (`d613ae28`) pushed to origin
 - Next: user approves the PR body, then open the PR to smnorris/bcfishpass and tick fork #15
+
+## Session 2026-11-19
+
+- Maintainer on smnorris/bcfishpass#937 (2026-10-25): don't send a PR. The fix he wants is fwapg mainstems (smnorris/fwapg#145) with the real CABD points; any stopgap uses the real CABD ids
+- Parking comment posted on fork #15 (issuecomment-7025626353); #15 stays open
+- Archived as parked; the worktree is removed after the push

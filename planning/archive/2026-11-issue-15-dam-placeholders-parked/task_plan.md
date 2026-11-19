@@ -53,8 +53,8 @@ Decided by the user at plan approval, 2026-10-25.
 - [x] `/code-check` on the code diff (3 rounds, all Clean; round 3 led to the `'CABD'` amendment)
 - [x] `fix-dam-placeholders-crossings` cut from `upstream/main` (`d613ae28`), with the two SQL files checked out from the work branch instead of cherry-picked, because the work commits also touch `planning/`. The tree diff against the work branch is `planning/` only
 - [x] Commit message: no `#N`, no `Claude-Session:`, keeps `Co-Authored-By`, no Assisted-by offer
-- [ ] Push to origin. **Show you the PR body and confirm before** opening the PR to smnorris/bcfishpass (referencing #937, before/after counts, id-range and `crossing_source` as his call)
-- [ ] Tick the "Next" checkboxes on fork #15 and link the PR
+- [ ] *(not done: parked 2026-11-19, the maintainer asked for no PR)* Push to origin. **Show you the PR body and confirm before** opening the PR to smnorris/bcfishpass (referencing #937, before/after counts, id-range and `crossing_source` as his call)
+- [ ] *(not done: parked; fork #15 got a parking comment instead)* Tick the "Next" checkboxes on fork #15 and link the PR
 
 ## Owed at the end (reported, done after merge)
 - [ ] Flip the link `bcfishpass` bundle to treat placeholders as barriers (NewGraphEnvironment/link#244, NewGraphEnvironment/link#367)
@@ -62,10 +62,10 @@ Decided by the user at plan approval, 2026-10-25.
 - [ ] Remove the `bcfishpass-15` worktree and sync fork `main` to upstream
 
 ## Validation
-- [ ] No automated test suite for model SQL. Phase 4's rollback test on `bcfishpass_dev` is the proof, and its acceptance queries carry the evidence
-- [ ] `/code-check` clean
-- [ ] PWF checkboxes match landed work
-- [ ] `/planning-archive` on completion
+- [x] No automated test suite for model SQL. Phase 4's rollback test on `bcfishpass_dev` is the proof, and its acceptance queries carry the evidence
+- [x] `/code-check` clean
+- [x] PWF checkboxes match landed work
+- [x] `/planning-archive` on completion
 
 ### How each change is proved
 
