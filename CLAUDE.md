@@ -111,6 +111,7 @@ psql postgresql://postgres@localhost:8000/bcfishpass_test
 - `main` mirrors upstream `main`, fast-forward only. Nothing of ours is committed there.
 - `newgraph` holds this `CLAUDE.md` and our parameters, and takes `main` by merge.
 - A fix for upstream gets its own branch cut from upstream `main`, with no planning files and no `CLAUDE.md`. Planning for it lives on a separate working branch that stays on the fork.
+- A PR from this fork to upstream gets no repository secrets, so upstream's full-pipeline check (`.github/workflows/ng-test-model.yaml`, which runs on PRs touching `model/**`) fails at its first job. Our own evidence is a run of the changed SQL inside a transaction that rolls back, on a dev database. Only the maintainer can run the full pipeline on the branch, so the PR asks for it.
 
 <!-- conventions-branch: newgraph -->
 
