@@ -112,6 +112,7 @@ psql postgresql://postgres@localhost:8000/bcfishpass_test
 - `newgraph` holds this `CLAUDE.md` and our parameters, and takes `main` by merge.
 - A fix for upstream gets its own branch cut from upstream `main`, with no planning files and no `CLAUDE.md`. Planning for it lives on a separate working branch that stays on the fork.
 - A PR from this fork to upstream gets no repository secrets, so upstream's full-pipeline check (`.github/workflows/ng-test-model.yaml`, which runs on PRs touching `model/**`) fails at its first job. Our own evidence is a run of the changed SQL inside a transaction that rolls back, on a dev database. Only the maintainer can run the full pipeline on the branch, so the PR asks for it.
+- Crossing fixes (rows in `data/user_modelled_crossing_fixes.csv` and similar) go straight to upstream as a PR, with no issue first. The body is one plain line, such as "A few modelled crossing fixes from imagery review and field work.": no crossing IDs, no counts and no AI sentence. Show the title and body first, and open the PR only after an explicit yes.
 
 <!-- conventions-branch: newgraph -->
 
